@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
-	"fmt"
 
 	"github.com/mesosphere/dcos-commons/cli"
 	"github.com/mesosphere/dcos-commons/cli/config"
@@ -22,11 +22,11 @@ func main() {
 
 type SQLHandler struct {
 	database string
-	user string
+	user     string
 }
 
 func (cmd *SQLHandler) sql(c *kingpin.ParseContext) error {
-	var dcosCmd []string;
+	var dcosCmd []string
 	cockroachHostFlag := fmt.Sprintf("--host=internal.%s.l4lb.thisdcos.directory", config.ServiceName)
 	cockroachTask := fmt.Sprintf("%s-1-node-join", config.ServiceName)
 	dcosCmd = append(dcosCmd,
