@@ -19,6 +19,7 @@ func main() {
 
 	handleSQLSection(app)
 	handleBackupRestoreSection(app)
+	handleVersion(app)
 
 	kingpin.MustParse(app.Parse(cli.GetArguments()))
 }
@@ -173,6 +174,10 @@ type sqlHandler struct {
 }
 
 func (cmd *sqlHandler) sql(c *kingpin.ParseContext) error {
+	fmt.Printf("################################# \n")
+	fmt.Printf("Please ensure that DC/OS is 1.10 or later and DC/OS CLI version is 0.5.2 or later\n")
+	fmt.Printf("################################# \n")
+
 	var dcosCmd []string
 	cockroachHostFlag := fmt.Sprintf("--host=internal.%s.l4lb.thisdcos.directory", config.ServiceName)
 	cockroachTask := fmt.Sprintf("%s-1-node-join", config.ServiceName)
@@ -219,6 +224,21 @@ func runDcosCommand(arg ...string) {
 		fmt.Printf("Unable to run DC/OS command: %s\n", strings.Join(arg, " "))
 		fmt.Printf("Make sure your PATH includes the 'dcos' executable.\n")
 	}
+}
+
+func version(c *kingpin.ParseContext) error {
+	runDcosCommand("task",
+			"exec",
+			"-it",
+			"cockroachdb-0-node-init",
+			"./cockroach",
+			"version")
+	runDcosCommand("--version")
+	return nil
+}
+
+func handleVersion(app *kingpin.Application) {
+	app.Command("version", "Output CockroachDB version and dependency details").Action(version)
 }
 
 func handleSQLSection(app *kingpin.Application) {

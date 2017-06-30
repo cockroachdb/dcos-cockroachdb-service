@@ -1,6 +1,6 @@
 {
   "packagingVersion": "2.0",
-  "minDcosReleaseVersion": "1.9",
+  "minDcosReleaseVersion": "1.10",
   "name": "cockroachdb",
   "version": "1.0.1",
   "maintainer": "alex@cockroachlabs.com",
