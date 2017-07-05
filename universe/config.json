@@ -33,7 +33,7 @@
             "title": "CockroachDB version",
             "description": "Production release version of CockroachDB",
             "type": "string",
-            "default": "1.0.1"
+            "default": "1.0.3"
           },
           "gui_port":{
             "title": "CockroachDB GUI Port",
