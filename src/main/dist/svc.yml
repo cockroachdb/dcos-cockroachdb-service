@@ -172,7 +172,7 @@ plans:
   backup:
     strategy: serial
     phases:
-      backup-test:
+      backup:
         strategy: serial
         pod: sidecar
         steps:
@@ -180,7 +180,7 @@ plans:
   restore:
     strategy: serial
     phases:
-      backup-test:
+      restore:
         strategy: serial
         pod: cockroachdb
         steps:
