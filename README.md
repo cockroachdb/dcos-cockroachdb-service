@@ -90,12 +90,12 @@ original [design document](https://github.com/cockroachdb/cockroach#design).
 	```
 	$ dcos cockroachdb endpoints
 	[
-	  "internal",
-	  "gui",
+	  "http",
+	  "pg",
 	]
-	$ dcos cockroachdb endpoints internal
+	$ dcos cockroachdb endpoints pg
         {
-          "vips": ["internal.cockroachdb.l4lb.thisdcos.directory:26257"],
+          "vips": ["pg.cockroachdb.l4lb.thisdcos.directory:26257"],
           "address": [
             "10.0.2.77:26257",
             "10.0.0.61:26257",
@@ -106,7 +106,7 @@ original [design document](https://github.com/cockroachdb/cockroach#design).
             "cockroachdb-1-node-join.cockroachdb.autoip.dcos.thisdcos.directory:26257",
             "cockroachdb-2-node-join.cockroachdb.autoip.dcos.thisdcos.directory:26257"
           ],
-          "vip": "internal.cockroachdb.l4lb.thisdcos.directory:26257"
+          "vip": "pg.cockroachdb.l4lb.thisdcos.directory:26257"
         }
 	```
 
@@ -114,20 +114,20 @@ original [design document](https://github.com/cockroachdb/cockroach#design).
 
         ```
         $ dcos node ssh --master-proxy --leader
-        $ docker run -it cockroachdb/cockroach sql --insecure --host=internal.cockroachdb.l4lb.thisdcos.directory
+        $ docker run -it cockroachdb/cockroach sql --insecure --host=pg.cockroachdb.l4lb.thisdcos.directory
         # Welcome to the cockroach SQL interface.
         # All statements must be terminated by a semicolon.
         # To exit: CTRL + D.
-        root@internal.cockroachdb.l4lb.thisdcos.directory:26257/> CREATE
+        root@pg.cockroachdb.l4lb.thisdcos.directory:26257/> CREATE
         DATABASE bank;
         CREATE DATABASE
-        root@internal.cockroachdb.l4lb.thisdcos.directory:26257/> CREATE TABLE
+        root@pg.cockroachdb.l4lb.thisdcos.directory:26257/> CREATE TABLE
         bank.accounts (id INT PRIMARY KEY, balance DECIMAL);
         CREATE TABLE
-        root@internal.cockroachdb.l4lb.thisdcos.directory:26257/> INSERT INTO
+        root@pg.cockroachdb.l4lb.thisdcos.directory:26257/> INSERT INTO
         bank.accounts VALUES (1234, 10000.50);
         INSERT 1
-        root@internal.cockroachdb.l4lb.thisdcos.directory:26257/> SELECT * FROM
+        root@pg.cockroachdb.l4lb.thisdcos.directory:26257/> SELECT * FROM
         bank.accounts;
         +------+----------+
         |  id  | balance  |
@@ -210,7 +210,7 @@ You can customize the amount of RAM allocated to each node. Change this value by
 
 You can customize the ports exposed by the service via the service configuratiton. If you wish to install multiple instances of the service and have them colocate on the same machines, you must ensure that **no** ports are common between those instances. Customizing ports is only needed if you require multiple instances sharing a single machine. This customization is optional otherwise.
 
-There are two ports that can be customized: the `Internal` port, which is used for inter-node communication and accepting client connections, and the `GUI` port which serves the CockroachDB Admin UI as well as some debug endpoints.
+There are two ports that can be customized: the `pg` port, which is used for inter-node communication and accepting client connections via the PostgreSQL wire protocol, and the `http` port which serves the CockroachDB Admin UI as well as some debug endpoints.
 
 <a name="storage-volumes"></a>
 ### Storage Volumes
@@ -329,7 +329,7 @@ you're running an older version, you can open up a shell by running:
 
 ```
 dcos node ssh --master-proxy --leader
-docker run -it cockroachdb/cockroach sql --insecure --host=internal.cockroachdb.l4lb.thisdcos.directory
+docker run -it cockroachdb/cockroach sql --insecure --host=pg.cockroachdb.l4lb.thisdcos.directory
 ```
 
 <a name="managing"></a>
