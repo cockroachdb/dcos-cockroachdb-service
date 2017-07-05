@@ -24,7 +24,7 @@ $MESOS_SANDBOX/$COCKROACH_VERSION/cockroach cert create-client root \
     --certs-dir=certs \
     --ca-key=my-safe-directory/ca.key
 
-# Create a key pair for the nodes
+# Create a key pair for the first node
 $MESOS_SANDBOX/$COCKROACH_VERSION/cockroach cert create-node \
     localhost \
     $(hostname) \
