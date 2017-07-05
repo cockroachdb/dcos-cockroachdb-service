@@ -96,7 +96,7 @@
             "title": "Memory size (MB)",
             "description": "Template pod mem requirements (in MB)",
             "type": "integer",
-            "default":1000
+            "default":3000
           },
           "disk": {
             "title": "Disk size (MB)",
