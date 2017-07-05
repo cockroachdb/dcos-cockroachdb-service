@@ -20,8 +20,8 @@ class CockroachEmitter:
         self.run = False
 
     def start(self):
-        PORT_GUI = os.getenv("PORT_GUI")
-        url = "http://localhost:{}/_status/vars".format(PORT_GUI)
+        PORT_HTTP = os.getenv("PORT_HTTP")
+        url = "http://localhost:{}/_status/vars".format(PORT_HTTP)
 
         self.run = True
         while self.run:

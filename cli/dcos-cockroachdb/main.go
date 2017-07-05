@@ -179,7 +179,7 @@ func (cmd *sqlHandler) sql(c *kingpin.ParseContext) error {
 	fmt.Printf("################################# \n")
 
 	var dcosCmd []string
-	cockroachHostFlag := fmt.Sprintf("--host=internal.%s.l4lb.thisdcos.directory", config.ServiceName)
+	cockroachHostFlag := fmt.Sprintf("--host=pg.%s.l4lb.thisdcos.directory", config.ServiceName)
 	cockroachTask := fmt.Sprintf("%s-0-node", config.ServiceName)
 
 	var dcosFlag string
