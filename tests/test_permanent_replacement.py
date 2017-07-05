@@ -23,7 +23,7 @@ def cockroach_cmd(sql_command, database='', task='cockroachdb-1-node-join'):
     dcos_command = """task exec {} \
         ./cockroach sql \
         -e "{}" --insecure \
-        --host=internal.cockroachdb.l4lb.thisdcos.directory""".format(task, sql_command)
+        --host=pg.cockroachdb.l4lb.thisdcos.directory""".format(task, sql_command)
     if database:
         dcos_command += ' -d {}'.format(database)
     return dcos_command
@@ -35,7 +35,7 @@ def cockroach_nodes_healthy(task='cockroachdb-1-node-join'):
     matches the DEFAULT_TASK_COUNT. '''
     cmd_node_ls = "task exec {} \
         ./cockroach node ls \
-        --host='internal.cockroachdb.l4lb.thisdcos.directory' \
+        --host='pg.cockroachdb.l4lb.thisdcos.directory' \
         --insecure".format(task)
     out_node_ls = cmd.run_cli(cmd_node_ls)
     return '{} row'.format(DEFAULT_TASK_COUNT) in out_node_ls

@@ -10,7 +10,6 @@ echo "Looks like there's already at least one other CockroachDB node running, co
 $MESOS_SANDBOX/$COCKROACH_VERSION/cockroach start \
     --insecure \
     --logtostderr \
-    --http-port=$PORT_GUI \
-    --port=$PORT_INTERNAL \
-    --join="internal.cockroachdb.l4lb.thisdcos.directory:26257"
-
+    --http-port=$PORT_HTTP \
+    --port=$PORT_PG \
+    --join="pg.cockroachdb.l4lb.thisdcos.directory:26257"

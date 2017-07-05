@@ -33,29 +33,29 @@
             "title": "CockroachDB version",
             "description": "Production release version of CockroachDB",
             "type": "string",
-            "default": "1.0.1"
+            "default": "1.0.2"
           },
-          "gui_port":{
-            "title": "CockroachDB GUI Port",
-            "description": "Port for CockroachDB admin GUI",
+          "http_port":{
+            "title": "CockroachDB HTTP Port",
+            "description": "Port for CockroachDB admin UI",
             "type": "number",
             "default":80
           },
-          "internal_port":{
-            "title": "CockroachDB Internal Port",
-            "description": "Port for CockroachDB internal communication",
+          "pg_port":{
+            "title": "CockroachDB PG Port",
+            "description": "Port for CockroachDB client communication",
             "type": "number",
             "default":26257
           },
-          "container_gui_port":{
-            "title": "Container GUI Port",
-            "description": "Container port for CockroachDB admin GUI. This port MUST be available on the host machine.",
+          "container_http_port":{
+            "title": "Container HTTP Port",
+            "description": "Container port for CockroachDB admin UI. This port MUST be available on the host machine.",
             "type": "number",
             "default":8123
           },
-          "container_internal_port":{
-            "title": "Container Internal Port",
-            "description": "Container port for CockroachDB internal communication. This port MUST be available on the host machine.",
+          "container_pg_port":{
+            "title": "Container PG Port",
+            "description": "Container port for CockroachDB client communication. This port MUST be available on the host machine.",
             "type": "number",
             "default":26257
           },
@@ -136,7 +136,7 @@
             "title": "Placement constraint",
             "description": "Marathon-style placement constraint for nodes. Example: 'hostname:UNIQUE'",
             "type": "string",
-            "default": "hostname:UNIQUE"
+            "default": ""
           },
           "cpus": {
             "title": "CPU count",
