@@ -39,9 +39,7 @@
   - [Rack-aware Replication](#rack-aware-replication)
   - [Backup Storage](#backup-storage)
   - [Enterprise Backup and Restore](#enterprise-backup-restore)
-- [Support](#support)
-  - [Cockroach Labs](#package-versioning-scheme)
-  - [Contacting Technical Support](#contacting-technical-support)
+- [Supported Versions](#supported-versions)
 
 <a name="overview"></a>
 # Overview
@@ -273,7 +271,7 @@ documentation](https://www.cockroachlabs.com/docs/stable/cluster-settings.html).
 Follow these steps to uninstall the service.
 
 1. Uninstall the service. From the DC/OS CLI, enter `dcos package uninstall`.
-1. Clean up remaining reserved resources with the framework cleaner script, `janitor.py`. [More information about the framework cleaner script](https://docs.mesosphere.com/1.9/deploying-services/uninstall/#framework-cleaner).
+1. Clean up remaining reserved resources with the framework cleaner script, `janitor.py`. [More information about the framework cleaner script](https://docs.mesosphere.com/1.9/deploying-services/uninstall/#framework-cleaner). Note that this step is only needed for DC/OS versions older than 1.10.
 
 To uninstall an instance named `cockroachdb` (the default), run:
 ``` shell
@@ -456,7 +454,6 @@ For more details on how the data is being backed up, please see the
 [documentation of the underlying `cockroach dump`
 command](https://www.cockroachlabs.com/docs/stable/sql-dump.html).
 
-
 You can configure the communication with S3 using the following optional flags
 to the CLI command:
 
@@ -465,6 +462,11 @@ to the CLI command:
 * `--s3-dir`: AWS S3 target path
 * `--s3-backup-dir`: Target path within s3-dir
 * `--region=`: AWS region
+
+By default, the AWS access and secret keys will be pulled from your environment
+via the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables,
+respectively. You must either have these environment variables defined or
+specify the flags for the backup to work.
 
 Make sure that you provision your nodes with enough disk space to perform a
 backup. The backups are stored on disk before being uploaded to S3,
@@ -493,6 +495,11 @@ And it takes the following optional flags:
 * `--aws-secret-key`: AWS Secret Key
 * `--s3-dir`: AWS S3 target path
 * `--region=`: AWS region
+
+By default, the AWS access and secret keys will be pulled from your environment
+via the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables,
+respectively. You must either have these environment variables defined or
+specify the flags for the restore to work.
 
 <a name="troubleshooting"></a>
 # Troubleshooting
@@ -554,24 +561,8 @@ or a [faster, distributed restore process](https://www.cockroachlabs.com/docs/st
 consider contacting Cockroach Labs about an
 [enterprise license](https://www.cockroachlabs.com/pricing/).
 
-<a name="support"></a>
-# Support
-
-<a name="package-versioning-scheme"></a>
-## Package Versioning Scheme
+<a name="supported-versions"></a>
+# Supported Versions
 
 - CockroachDB: Supports versions 1.0 and above
 - DC/OS: Tested on versions 1.9 and 1.10
-
-Packages are versioned with an `a.b.c-x.y.z` format, where `a.b.c` is the version of the DC/OS integrtion and `x.y.z` indicates the version of CockroachDB. For example, `1.9.0-1.0.3` indicates version `1.9.0` of the DC/OS integrtion and version `1.0.3` of CockroachDB.
-
-<a name="contacting-technical-support"></a>
-## Contacting Technical Support
-
-### Cockroach Labs
-
-[Support resources](https://www.cockroachlabs.com/docs/stable/support-resources.html)
-
-### Mesosphere
-
-[Submit a request](https://support.mesosphere.com/hc/en-us/requests/new).
