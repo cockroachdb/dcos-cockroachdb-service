@@ -180,7 +180,7 @@ func (cmd *sqlHandler) sql(c *kingpin.ParseContext) error {
 
 	var dcosCmd []string
 	cockroachHostFlag := fmt.Sprintf("--host=internal.%s.l4lb.thisdcos.directory", config.ServiceName)
-	cockroachTask := fmt.Sprintf("%s-1-node-join", config.ServiceName)
+	cockroachTask := fmt.Sprintf("%s-0-node", config.ServiceName)
 
 	var dcosFlag string
 	if cmd.execute != "" {
@@ -227,10 +227,11 @@ func runDcosCommand(arg ...string) {
 }
 
 func version(c *kingpin.ParseContext) error {
+	cockroachTask := fmt.Sprintf("%s-0-node", config.ServiceName)
 	runDcosCommand("task",
 			"exec",
 			"-it",
-			"cockroachdb-0-node-init",
+			cockroachTask,
 			"./cockroach",
 			"version")
 	runDcosCommand("--version")
