@@ -47,14 +47,12 @@ pods:
               ln -s $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach cockroach && \
               $MESOS_SANDBOX/start.sh"
         readiness-check:
-          cmd: "$MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach node ls \
-                --insecure --port=$PORT_PG >/dev/null 2>/dev/null"
+          cmd: "curl -sf localhost:8123/_admin/v1/health >/dev/null 2>/dev/null"
           interval: 10
           delay: 5
           timeout: 300
         health-check:
-          cmd: "$MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach node ls \
-                --insecure --port=$PORT_PG >/dev/null 2>/dev/null"
+          cmd: "curl -sf localhost:8123/_admin/v1/health >/dev/null 2>/dev/null"
           interval: 120
           grace-period: 30
           max-consecutive-failures: 3
@@ -74,14 +72,12 @@ pods:
               ln -s $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach cockroach && \
               $MESOS_SANDBOX/join.sh"
         readiness-check:
-          cmd: "$MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach node ls \
-                --insecure --port=$PORT_PG >/dev/null 2>/dev/null"
+          cmd: "curl -sf localhost:8123/_admin/v1/health >/dev/null 2>/dev/null"
           interval: 10
           delay: 5
           timeout: 300
         health-check:
-          cmd: "$MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach node ls \
-                --insecure --port=$PORT_PG >/dev/null 2>/dev/null"
+          cmd: "curl -sf localhost:8123/_admin/v1/health >/dev/null 2>/dev/null"
           interval: 120
           grace-period: 30
           max-consecutive-failures: 3
