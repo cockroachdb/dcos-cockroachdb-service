@@ -115,14 +115,14 @@ pods:
               --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
               restore/$DATABASE_NAME.sql"
         resource-set: sidecar-resources
-  sidecar:
+  admin:
     count: {{SIDE_COUNT}}
     uris:
       - {{COCKROACH_URI}}
       - {{BOOTSTRAP_URI}}
     placement: {{SIDE_PLACEMENT}}
     resource-sets:
-      sidecar-resources:
+      admin-resources:
         cpus: {{SIDE_CPUS}}
         memory: {{SIDE_MEM}}
         volume:
@@ -146,7 +146,7 @@ pods:
               $MESOS_SANDBOX/aws.sh s3 cp \
               backup/$DATABASE_NAME.sql \
               s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/"
-        resource-set: sidecar-resources
+        resource-set: admin-resources
 plans:
   deploy:
     strategy: serial
@@ -170,7 +170,7 @@ plans:
     phases:
       backup:
         strategy: serial
-        pod: sidecar
+        pod: admin
         steps:
           - default: [[backup]]
   restore:
