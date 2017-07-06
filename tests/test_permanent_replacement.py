@@ -59,7 +59,6 @@ def test_permanent_replacement():
     shakedown.run_dcos_command('cockroachdb pods replace cockroachdb-0');
     tasks.check_running(SERVICE_NAME, DEFAULT_TASK_COUNT, 3*60)                                  # Wait for new CockroachDB node to run
     shakedown.wait_for(lambda: cockroach_nodes_healthy(), noisy=True, timeout_seconds=2*60)      # Wait for healthy CockroachDB cluster
-    time.sleep(10)                                                                               # Wait for CockroachDB sync
 
     # Run cmd_select
     out_select = cmd.run_cli(cmd_select)

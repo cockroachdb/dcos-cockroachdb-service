@@ -180,7 +180,6 @@ plans:
         pod: cockroachdb
         steps:
           - 0: [[restore]]
-          - default: [[]]
   update:
     strategy: serial
     phases:
