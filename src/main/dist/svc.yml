@@ -120,7 +120,6 @@ pods:
     uris:
       - {{COCKROACH_URI}}
       - {{BOOTSTRAP_URI}}
-    placement: {{SIDE_PLACEMENT}}
     resource-sets:
       admin-resources:
         cpus: {{SIDE_CPUS}}
