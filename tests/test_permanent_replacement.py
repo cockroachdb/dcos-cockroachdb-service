@@ -1,3 +1,4 @@
+import json
 import pytest
 import time
 import shakedown
@@ -41,7 +42,13 @@ def cockroach_nodes_healthy(task='cockroachdb-1-node-join'):
     return '{} row'.format(DEFAULT_TASK_COUNT) in out_node_ls
 
 @pytest.mark.recovery
+@pytest.mark.beta
 def test_permanent_replacement():
+    cockroachdb_ids = tasks.get_task_ids(PACKAGE_NAME, 'cockroachdb-0')
+    # get current agent id:
+    stdout = cmd.run_cli('cockroachdb pods info cockroachdb-0')
+    old_agent = json.loads(stdout)[0]['info']['slaveId']['value']
+
     # Generate SQL Commands
     cmd_drop_database = cockroach_cmd('DROP DATABASE IF EXISTS bank;')
     cmd_create_database = cockroach_cmd('CREATE DATABASE bank;')
@@ -56,7 +63,13 @@ def test_permanent_replacement():
     out_insert = cmd.run_cli(cmd_insert)
 
     # Replace the init node
-    shakedown.run_dcos_command('cockroachdb pods replace cockroachdb-0');
+    jsonobj = json.loads(cmd.run_cli('cockroachdb pods replace cockroachdb-0'))
+
+    assert len(jsonobj) == 2
+    assert jsonobj['pod'] == 'cockroachdb-0'
+    assert len(jsonobj['tasks']) == 2
+    assert jsonobj['tasks'][0] == 'cockroachdb-0-metrics'
+    assert jsonobj['tasks'][1] == 'cockroachdb-0-node-init'
     tasks.check_running(SERVICE_NAME, DEFAULT_TASK_COUNT, 3*60)                                  # Wait for new CockroachDB node to run
     shakedown.wait_for(lambda: cockroach_nodes_healthy(), noisy=True, timeout_seconds=2*60)      # Wait for healthy CockroachDB cluster
 
@@ -65,4 +78,3 @@ def test_permanent_replacement():
 
     # Confirm Output
     assert '2 rows' in out_select
-
