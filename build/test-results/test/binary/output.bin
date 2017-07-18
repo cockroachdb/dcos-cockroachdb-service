@@ -1,1075 +1,0 @@
-”INFO  2017-07-18 09:50:40,559 [Test worker] com.mesosphere.sdk.cockroachdb.scheduler.ServiceSpecTest:getRawServiceSpec(74): Configured environment:
-COCKROACH_HTTP_PORT=80
-COCKROACH_PG_PORT=26257
-]CONFIG_TEMPLATE_PATH=/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist
-CONTAINER_HTTP_PORT=8123
-CONTAINER_PG_PORT=26257
-EXECUTOR_URI=
-FRAMEWORK_NAME=cockroachdb
-LIBMESOS_URI=
-NODE_COUNT=2
-NODE_CPUS=0.1
-NODE_DISK=5000
-NODE_DISK_TYPE=ROOT
-NODE_MEM=512
-PORT_API=8080
-SIDE_COUNT=2
-SIDE_CPUS=0.1
-SIDE_DISK=5000
-SIDE_DISK_TYPE=ROOT
-SIDE_MEM=512
-ŠINFO  2017-07-18 09:50:41,087 [Test worker] com.mesosphere.sdk.specification.yaml.RawServiceSpec$Builder:build(64): Rendered ServiceSpec:
-name: cockroachdb
-scheduler:
-  principal: 
-pods:
-  cockroachdb:
-    count: 2
-
-    uris:
-	      - 
-	      - 
-    placement: 
-    resource-sets:
-      server-resources:
-        cpus: 0.1
-        memory: 512
-        ports:
-          http:
-            port: 8123
-            vip:
-              prefix: http
-              port: 80
-          pg:
-            port: 26257
-            vip:
-              prefix: pg
-              port: 26257
-        volume:
-!          path: "cockroach-data"
-          type: ROOT
-          size: 5000
-      sidecar-resources:
-        cpus: 0.1
-        memory: 512
-    tasks:
-      node-init:
-        goal: RUNNING
-'        resource-set: server-resources
-        configs:
-          start:
-r            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/start.sh.mustache"
-            dest: "start.sh"
-          join:
-q            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/join.sh.mustache"
-            dest: "join.sh"
-        cmd: "./bootstrap && \
-4              chmod +x $MESOS_SANDBOX/start.sh && \
-=              ln -s $MESOS_SANDBOX//cockroach cockroach && \
-'              $MESOS_SANDBOX/start.sh"
-        readiness-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 10
-          delay: 5
-          timeout: 300
-        health-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 120
-          grace-period: 30
-&          max-consecutive-failures: 3
-          timeout: 10
-          delay: 0
-        env:
-          COCKROACH_VERSION: 
-      node-join:
-        goal: RUNNING
-'        resource-set: server-resources
-        configs:
-          join:
-q            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/join.sh.mustache"
-            dest: "join.sh"
-        cmd: "./bootstrap && \
-3              chmod +x $MESOS_SANDBOX/join.sh && \
-=              ln -s $MESOS_SANDBOX//cockroach cockroach && \
-&              $MESOS_SANDBOX/join.sh"
-        readiness-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 10
-          delay: 5
-          timeout: 300
-        health-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 120
-          grace-period: 30
-&          max-consecutive-failures: 3
-          timeout: 10
-          delay: 0
-        env:
-          COCKROACH_VERSION: 
-      metrics:
-        goal: RUNNING
-(        resource-set: sidecar-resources
-        cmd: "docker run \
-"              -e PORT_HTTP=8123 \
-4              -e STATSD_UDP_HOST=$STATSD_UDP_HOST \
-4              -e STATSD_UDP_PORT=$STATSD_UDP_PORT \
-&              -e PYTHONUNBUFFERED=1 \
-!              --network='host' \
-4              sammisthemannis/cockroach-statsd:1.1"
-	  admin:
-    count: 2
-
-    uris:
-	      - 
-	      - 
-    resource-sets:
-      admin-resources:
-        cpus: 0.1
-        memory: 512
-        volume:
-#          path: "cockroach-backup"
-          type: ROOT
-          size: 5000
-    tasks:
-      backup:
-        goal: FINISHED
-        configs:
-          aws:
-p            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/aws.sh.mustache"
-            dest: "aws.sh"
-/        cmd: "./bootstrap --resolve=false && \
-2              chmod +x $MESOS_SANDBOX/aws.sh && \
-               mkdir backup && \
-3              touch backup/$DATABASE_NAME.sql && \
-I              $MESOS_SANDBOX//cockroach dump $DATABASE_NAME --insecure \
-B              --host='pg.cockroachdb.l4lb.thisdcos.directory' > \
--              backup/$DATABASE_NAME.sql && \
-,              $MESOS_SANDBOX/aws.sh s3 cp \
-*              backup/$DATABASE_NAME.sql \
->              s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/"
-&        resource-set: admin-resources
-      restore:
-        goal: FINISHED
-        configs:
-          aws:
-p            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/aws.sh.mustache"
-            dest: "aws.sh"
-        cmd: "./bootstrap && \
-1             chmod +x $MESOS_SANDBOX/aws.sh && \
-              mkdir restore && \
-+             $MESOS_SANDBOX/aws.sh s3 cp \
-P             s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/$DATABASE_NAME.sql \
-             restore/ && \
-8             $MESOS_SANDBOX//cockroach sql --insecure \
-J             --execute=\"CREATE DATABASE IF NOT EXISTS $DATABASE_NAME\" \
-B             --host='pg.cockroachdb.l4lb.thisdcos.directory' && \
--             $MESOS_SANDBOX//cockroach sql \
-4             --database=$DATABASE_NAME --insecure \
-A             --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
-)             restore/$DATABASE_NAME.sql"
-&        resource-set: admin-resources
-plans:
-
-  deploy:
-    strategy: serial
-    phases:
-      node-deploy:
-        strategy: serial
-        pod: cockroachdb
-        steps:
-(          - 0: [[node-init], [metrics]]
-.          - default: [[node-join], [metrics]]
-  replace:
-    strategy: parallel
-    phases:
-      node-deploy:
-        strategy: parallel
-        pod: cockroachdb
-        steps:
-(          - 0: [[node-init], [metrics]]
-.          - default: [[node-join], [metrics]]
-
-  backup:
-    strategy: serial
-    phases:
-      backup:
-        strategy: serial
-        pod: admin
-        steps:
-           - default: [[backup]]
-  restore:
-    strategy: serial
-    phases:
-      restore:
-        strategy: serial
-        pod: admin
-        steps:
-          - 0: [[restore]]
-
-  update:
-    strategy: serial
-    phases:
-      node-deploy:
-        strategy: serial
-        pod: cockroachdb
-        steps:
-(          - 0: [[node-init], [metrics]]
-.          - default: [[node-join], [metrics]]
-
-’INFO  2017-07-18 09:50:41,699 [Test worker] org.hibernate.validator.internal.util.Version:<clinit>(30): HV000001: Hibernate Validator 5.3.2.Final
-”INFO  2017-07-18 09:50:44,631 [Test worker] com.mesosphere.sdk.cockroachdb.scheduler.ServiceSpecTest:getRawServiceSpec(74): Configured environment:
-COCKROACH_HTTP_PORT=80
-COCKROACH_PG_PORT=26257
-]CONFIG_TEMPLATE_PATH=/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist
-CONTAINER_HTTP_PORT=8123
-CONTAINER_PG_PORT=26257
-EXECUTOR_URI=
-FRAMEWORK_NAME=cockroachdb
-LIBMESOS_URI=
-NODE_COUNT=2
-NODE_CPUS=0.1
-NODE_DISK=5000
-NODE_DISK_TYPE=ROOT
-NODE_MEM=512
-PORT_API=8080
-SIDE_COUNT=2
-SIDE_CPUS=0.1
-SIDE_DISK=5000
-SIDE_DISK_TYPE=ROOT
-SIDE_MEM=512
-ŠINFO  2017-07-18 09:50:44,641 [Test worker] com.mesosphere.sdk.specification.yaml.RawServiceSpec$Builder:build(64): Rendered ServiceSpec:
-name: cockroachdb
-scheduler:
-  principal: 
-pods:
-  cockroachdb:
-    count: 2
-
-    uris:
-	      - 
-	      - 
-    placement: 
-    resource-sets:
-      server-resources:
-        cpus: 0.1
-        memory: 512
-        ports:
-          http:
-            port: 8123
-            vip:
-              prefix: http
-              port: 80
-          pg:
-            port: 26257
-            vip:
-              prefix: pg
-              port: 26257
-        volume:
-!          path: "cockroach-data"
-          type: ROOT
-          size: 5000
-      sidecar-resources:
-        cpus: 0.1
-        memory: 512
-    tasks:
-      node-init:
-        goal: RUNNING
-'        resource-set: server-resources
-        configs:
-          start:
-r            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/start.sh.mustache"
-            dest: "start.sh"
-          join:
-q            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/join.sh.mustache"
-            dest: "join.sh"
-        cmd: "./bootstrap && \
-4              chmod +x $MESOS_SANDBOX/start.sh && \
-=              ln -s $MESOS_SANDBOX//cockroach cockroach && \
-'              $MESOS_SANDBOX/start.sh"
-        readiness-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 10
-          delay: 5
-          timeout: 300
-        health-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 120
-          grace-period: 30
-&          max-consecutive-failures: 3
-          timeout: 10
-          delay: 0
-        env:
-          COCKROACH_VERSION: 
-      node-join:
-        goal: RUNNING
-'        resource-set: server-resources
-        configs:
-          join:
-q            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/join.sh.mustache"
-            dest: "join.sh"
-        cmd: "./bootstrap && \
-3              chmod +x $MESOS_SANDBOX/join.sh && \
-=              ln -s $MESOS_SANDBOX//cockroach cockroach && \
-&              $MESOS_SANDBOX/join.sh"
-        readiness-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 10
-          delay: 5
-          timeout: 300
-        health-check:
-W          cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
-          interval: 120
-          grace-period: 30
-&          max-consecutive-failures: 3
-          timeout: 10
-          delay: 0
-        env:
-          COCKROACH_VERSION: 
-      metrics:
-        goal: RUNNING
-(        resource-set: sidecar-resources
-        cmd: "docker run \
-"              -e PORT_HTTP=8123 \
-4              -e STATSD_UDP_HOST=$STATSD_UDP_HOST \
-4              -e STATSD_UDP_PORT=$STATSD_UDP_PORT \
-&              -e PYTHONUNBUFFERED=1 \
-!              --network='host' \
-4              sammisthemannis/cockroach-statsd:1.1"
-	  admin:
-    count: 2
-
-    uris:
-	      - 
-	      - 
-    resource-sets:
-      admin-resources:
-        cpus: 0.1
-        memory: 512
-        volume:
-#          path: "cockroach-backup"
-          type: ROOT
-          size: 5000
-    tasks:
-      backup:
-        goal: FINISHED
-        configs:
-          aws:
-p            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/aws.sh.mustache"
-            dest: "aws.sh"
-/        cmd: "./bootstrap --resolve=false && \
-2              chmod +x $MESOS_SANDBOX/aws.sh && \
-               mkdir backup && \
-3              touch backup/$DATABASE_NAME.sql && \
-I              $MESOS_SANDBOX//cockroach dump $DATABASE_NAME --insecure \
-B              --host='pg.cockroachdb.l4lb.thisdcos.directory' > \
--              backup/$DATABASE_NAME.sql && \
-,              $MESOS_SANDBOX/aws.sh s3 cp \
-*              backup/$DATABASE_NAME.sql \
->              s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/"
-&        resource-set: admin-resources
-      restore:
-        goal: FINISHED
-        configs:
-          aws:
-p            template: "/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist/aws.sh.mustache"
-            dest: "aws.sh"
-        cmd: "./bootstrap && \
-1             chmod +x $MESOS_SANDBOX/aws.sh && \
-              mkdir restore && \
-+             $MESOS_SANDBOX/aws.sh s3 cp \
-P             s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/$DATABASE_NAME.sql \
-             restore/ && \
-8             $MESOS_SANDBOX//cockroach sql --insecure \
-J             --execute=\"CREATE DATABASE IF NOT EXISTS $DATABASE_NAME\" \
-B             --host='pg.cockroachdb.l4lb.thisdcos.directory' && \
--             $MESOS_SANDBOX//cockroach sql \
-4             --database=$DATABASE_NAME --insecure \
-A             --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
-)             restore/$DATABASE_NAME.sql"
-&        resource-set: admin-resources
-plans:
-
-  deploy:
-    strategy: serial
-    phases:
-      node-deploy:
-        strategy: serial
-        pod: cockroachdb
-        steps:
-(          - 0: [[node-init], [metrics]]
-.          - default: [[node-join], [metrics]]
-  replace:
-    strategy: parallel
-    phases:
-      node-deploy:
-        strategy: parallel
-        pod: cockroachdb
-        steps:
-(          - 0: [[node-init], [metrics]]
-.          - default: [[node-join], [metrics]]
-
-  backup:
-    strategy: serial
-    phases:
-      backup:
-        strategy: serial
-        pod: admin
-        steps:
-           - default: [[backup]]
-  restore:
-    strategy: serial
-    phases:
-      restore:
-        strategy: serial
-        pod: admin
-        steps:
-          - 0: [[restore]]
-
-  update:
-    strategy: serial
-    phases:
-      node-deploy:
-        strategy: serial
-        pod: cockroachdb
-        steps:
-(          - 0: [[node-init], [metrics]]
-.          - default: [[node-join], [metrics]]
-
-’INFO  2017-07-18 09:50:44,699 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:fixLastDeploymentType(315): Fixing last deployment type
-wINFO  2017-07-18 09:50:44,704 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:getPlans(277): Getting plans
-®INFO  2017-07-18 09:50:44,725 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-¾INFO  2017-07-18 09:50:44,731 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÔWARN  2017-07-18 09:50:44,736 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-ÄINFO  2017-07-18 09:50:44,746 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:44,747 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:44,748 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÐWARN  2017-07-18 09:50:44,749 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:44,749 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:44,750 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-¾INFO  2017-07-18 09:50:44,751 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÔWARN  2017-07-18 09:50:44,751 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-ÄINFO  2017-07-18 09:50:44,752 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:44,753 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:44,754 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÐWARN  2017-07-18 09:50:44,755 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:44,756 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:44,766 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-¾INFO  2017-07-18 09:50:44,767 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÔWARN  2017-07-18 09:50:44,768 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-ÄINFO  2017-07-18 09:50:44,769 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:44,770 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:44,771 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÐWARN  2017-07-18 09:50:44,773 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:44,774 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:44,774 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-¾INFO  2017-07-18 09:50:44,775 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÔWARN  2017-07-18 09:50:44,776 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-ÄINFO  2017-07-18 09:50:44,777 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:44,778 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:44,780 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÐWARN  2017-07-18 09:50:44,781 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:44,781 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-¥INFO  2017-07-18 09:50:44,783 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [backup]
-–INFO  2017-07-18 09:50:44,785 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-ÂWARN  2017-07-18 09:50:44,786 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-backup at: Tasks/admin-0-backup/TaskInfo
-»INFO  2017-07-18 09:50:44,787 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-¥INFO  2017-07-18 09:50:44,787 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-1, with tasks: [backup]
-–INFO  2017-07-18 09:50:44,788 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-1-backup, admin-1-restore]
-ÂWARN  2017-07-18 09:50:44,788 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-1-backup at: Tasks/admin-1-backup/TaskInfo
-»INFO  2017-07-18 09:50:44,789 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-1:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-¦INFO  2017-07-18 09:50:44,789 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [restore]
-–INFO  2017-07-18 09:50:44,790 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-ÄWARN  2017-07-18 09:50:44,790 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-restore at: Tasks/admin-0-restore/TaskInfo
-¼INFO  2017-07-18 09:50:44,791 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[restore]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:44,791 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-¾INFO  2017-07-18 09:50:44,792 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÔWARN  2017-07-18 09:50:44,792 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-ÄINFO  2017-07-18 09:50:44,793 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:44,793 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:44,794 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÐWARN  2017-07-18 09:50:44,794 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:44,795 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:44,795 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-¾INFO  2017-07-18 09:50:44,796 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÔWARN  2017-07-18 09:50:44,796 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-ÄINFO  2017-07-18 09:50:44,797 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:44,798 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:44,798 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÐWARN  2017-07-18 09:50:44,799 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:44,800 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-’INFO  2017-07-18 09:50:44,822 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:updateConfig(516): Updating config with 5 validators...
-“INFO  2017-07-18 09:50:44,831 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(76): New prospective config:
-{
-  "name" : "cockroachdb",
-  "role" : "cockroachdb-role",
-)  "principal" : "cockroachdb-principal",
-  "api-port" : 8080,
-  "web-url" : null,
-%  "zookeeper" : "master.mesos:2181",
-  "pod-specs" : [ {
-    "type" : "cockroachdb",
-    "user" : null,
-    "count" : 2,
-    "image" : null,
-    "networks" : [ ],
-    "rlimits" : [ ],
-.    "uris" : [ "", "", "executor-test-uri" ],
-    "task-specs" : [ {
-      "name" : "node-init",
-      "goal" : "RUNNING",
-      "resource-set" : {
-#        "id" : "server-resources",
-(        "resource-specifications" : [ {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "cpus",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 0.1
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "mem",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 512.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-$          "@type" : "NamedVIPSpec",
-          "value" : {
-            "type" : "RANGES",
-            "scalar" : null,
-            "ranges" : {
-              "range" : [ {
-                 "begin" : 8123,
-                "end" : 8123
-              } ]
-            },
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "env-key" : null,
-           "port-name" : "http",
-          "protocol" : "tcp",
-%          "visibility" : "EXTERNAL",
-          "vip-name" : "http",
-          "vip-port" : 80,
-           "networkNames" : [ ],
-          "name" : "ports"
-        }, {
-$          "@type" : "NamedVIPSpec",
-          "value" : {
-            "type" : "RANGES",
-            "scalar" : null,
-            "ranges" : {
-              "range" : [ {
-!                "begin" : 26257,
-                "end" : 26257
-              } ]
-            },
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "env-key" : null,
-          "port-name" : "pg",
-          "protocol" : "tcp",
-%          "visibility" : "EXTERNAL",
-          "vip-name" : "pg",
-          "vip-port" : 26257,
-           "networkNames" : [ ],
-          "name" : "ports"
-        } ],
-&        "volume-specifications" : [ {
-)          "@type" : "DefaultVolumeSpec",
-          "type" : "ROOT",
-/          "container-path" : "cockroach-data",
-          "name" : "disk",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 5000.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-!          "envKey" : "DISK_SIZE"
-        } ],
-%        "role" : "cockroachdb-role",
-.        "principal" : "cockroachdb-principal"
-	      },
-      "command-spec" : {
-        "value" : "./bootstrap && chmod +x $MESOS_SANDBOX/start.sh && ln -s $MESOS_SANDBOX//cockroach cockroach && $MESOS_SANDBOX/start.sh",
-        "environment" : {
-#          "COCKROACH_VERSION" : ""
-
-        }
-	      },
-      "health-check-spec" : {
-]        "command" : "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null",
-(        "max-consecutive-failures" : 3,
-        "delay" : 0,
-        "interval" : 120,
-        "timeout" : 10,
-        "gracePeriod" : 30
-	      },
-!      "readiness-check-spec" : {
-]        "command" : "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null",
-        "delay" : 5,
-        "interval" : 10,
-        "timeout" : 300
-	      },
-      "config-files" : [ {
-        "name" : "start",
-&        "relative-path" : "start.sh",
-ñ        "template-content" : "#!/bin/bash\n\necho \"--------------------\"\necho \"STARTING COCKROACHDB\"\necho \"--------------------\"\n\necho \"Looks like there are no CockroachDB nodes running, starting first node...\"\n\necho \"-----------------------\"\necho \"GENERATING CERTIFICATES\"\necho \"-----------------------\"\n\n# Create directories for certificates\nmkdir certs\nmkdir my-safe-directory\n\n# Create the CA key pair\n$MESOS_SANDBOX/$COCKROACH_VERSION/cockroach cert create-ca \\\n    --certs-dir=certs \\\n    --ca-key=my-safe-directory/ca.key\n\n# Create a client key pair for the root user\n$MESOS_SANDBOX/$COCKROACH_VERSION/cockroach cert create-client root \\\n    --certs-dir=certs \\\n    --ca-key=my-safe-directory/ca.key\n\n# Create a key pair for the first node\n$MESOS_SANDBOX/$COCKROACH_VERSION/cockroach cert create-node \\\n    localhost \\\n    $(hostname) \\\n    --certs-dir=certs \\\n    --ca-key=my-safe-directory/ca.key\n\n# Start CockroachDB server\n$MESOS_SANDBOX/$COCKROACH_VERSION/cockroach start \\\n    --logtostderr \\\n    --insecure \\\n    --http-port=$PORT_HTTP \\\n    --port=$PORT_PG\n"
-      }, {
-        "name" : "join",
-%        "relative-path" : "join.sh",
-Ž        "template-content" : "#!/bin/bash\n\necho \"--------------------\"\necho \"JOINING COCKROACHDB\"\necho \"--------------------\"\n\necho \"Looks like there's already at least one other CockroachDB node running, connecting new node to the cluster...\"\n\n# Start CockroachDB server (join existing cluster)\n$MESOS_SANDBOX/$COCKROACH_VERSION/cockroach start \\\n    --insecure \\\n    --logtostderr \\\n    --http-port=$PORT_HTTP \\\n    --port=$PORT_PG \\\n    --join=\"pg.cockroachdb.l4lb.thisdcos.directory:26257\"\n"
-      } ],
-      "discovery-spec" : null
-	    }, {
-      "name" : "node-join",
-      "goal" : "RUNNING",
-      "resource-set" : {
-#        "id" : "server-resources",
-(        "resource-specifications" : [ {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "cpus",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 0.1
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "mem",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 512.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-$          "@type" : "NamedVIPSpec",
-          "value" : {
-            "type" : "RANGES",
-            "scalar" : null,
-            "ranges" : {
-              "range" : [ {
-                 "begin" : 8123,
-                "end" : 8123
-              } ]
-            },
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "env-key" : null,
-           "port-name" : "http",
-          "protocol" : "tcp",
-%          "visibility" : "EXTERNAL",
-          "vip-name" : "http",
-          "vip-port" : 80,
-           "networkNames" : [ ],
-          "name" : "ports"
-        }, {
-$          "@type" : "NamedVIPSpec",
-          "value" : {
-            "type" : "RANGES",
-            "scalar" : null,
-            "ranges" : {
-              "range" : [ {
-!                "begin" : 26257,
-                "end" : 26257
-              } ]
-            },
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "env-key" : null,
-          "port-name" : "pg",
-          "protocol" : "tcp",
-%          "visibility" : "EXTERNAL",
-          "vip-name" : "pg",
-          "vip-port" : 26257,
-           "networkNames" : [ ],
-          "name" : "ports"
-        } ],
-&        "volume-specifications" : [ {
-)          "@type" : "DefaultVolumeSpec",
-          "type" : "ROOT",
-/          "container-path" : "cockroach-data",
-          "name" : "disk",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 5000.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-!          "envKey" : "DISK_SIZE"
-        } ],
-%        "role" : "cockroachdb-role",
-.        "principal" : "cockroachdb-principal"
-	      },
-      "command-spec" : {
-‹        "value" : "./bootstrap && chmod +x $MESOS_SANDBOX/join.sh && ln -s $MESOS_SANDBOX//cockroach cockroach && $MESOS_SANDBOX/join.sh",
-        "environment" : {
-#          "COCKROACH_VERSION" : ""
-
-        }
-	      },
-      "health-check-spec" : {
-]        "command" : "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null",
-(        "max-consecutive-failures" : 3,
-        "delay" : 0,
-        "interval" : 120,
-        "timeout" : 10,
-        "gracePeriod" : 30
-	      },
-!      "readiness-check-spec" : {
-]        "command" : "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null",
-        "delay" : 5,
-        "interval" : 10,
-        "timeout" : 300
-	      },
-      "config-files" : [ {
-        "name" : "join",
-%        "relative-path" : "join.sh",
-Ž        "template-content" : "#!/bin/bash\n\necho \"--------------------\"\necho \"JOINING COCKROACHDB\"\necho \"--------------------\"\n\necho \"Looks like there's already at least one other CockroachDB node running, connecting new node to the cluster...\"\n\n# Start CockroachDB server (join existing cluster)\n$MESOS_SANDBOX/$COCKROACH_VERSION/cockroach start \\\n    --insecure \\\n    --logtostderr \\\n    --http-port=$PORT_HTTP \\\n    --port=$PORT_PG \\\n    --join=\"pg.cockroachdb.l4lb.thisdcos.directory:26257\"\n"
-      } ],
-      "discovery-spec" : null
-	    }, {
-      "name" : "metrics",
-      "goal" : "RUNNING",
-      "resource-set" : {
-$        "id" : "sidecar-resources",
-(        "resource-specifications" : [ {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "cpus",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 0.1
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "mem",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 512.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        } ],
-'        "volume-specifications" : [ ],
-%        "role" : "cockroachdb-role",
-.        "principal" : "cockroachdb-principal"
-	      },
-      "command-spec" : {
-Æ        "value" : "docker run -e PORT_HTTP=8123 -e STATSD_UDP_HOST=$STATSD_UDP_HOST -e STATSD_UDP_PORT=$STATSD_UDP_PORT -e PYTHONUNBUFFERED=1 --network='host' sammisthemannis/cockroach-statsd:1.1",
-        "environment" : { }
-	      },
-"      "health-check-spec" : null,
-%      "readiness-check-spec" : null,
-      "config-files" : [ ],
-      "discovery-spec" : null
-	    } ],
-    "placement-rule" : null,
-    "volumes" : [ ],
-    "pre-reserved-role" : "*",
-    "secrets" : [ ]
-  }, {
-    "type" : "admin",
-    "user" : null,
-    "count" : 2,
-    "image" : null,
-    "networks" : [ ],
-    "rlimits" : [ ],
-.    "uris" : [ "", "", "executor-test-uri" ],
-    "task-specs" : [ {
-      "name" : "backup",
-      "goal" : "FINISHED",
-      "resource-set" : {
-"        "id" : "admin-resources",
-(        "resource-specifications" : [ {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "cpus",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 0.1
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "mem",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 512.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        } ],
-&        "volume-specifications" : [ {
-)          "@type" : "DefaultVolumeSpec",
-          "type" : "ROOT",
-1          "container-path" : "cockroach-backup",
-          "name" : "disk",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 5000.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-!          "envKey" : "DISK_SIZE"
-        } ],
-%        "role" : "cockroachdb-role",
-.        "principal" : "cockroachdb-principal"
-	      },
-      "command-spec" : {
-ö        "value" : "./bootstrap --resolve=false && chmod +x $MESOS_SANDBOX/aws.sh && mkdir backup && touch backup/$DATABASE_NAME.sql && $MESOS_SANDBOX//cockroach dump $DATABASE_NAME --insecure --host='pg.cockroachdb.l4lb.thisdcos.directory' > backup/$DATABASE_NAME.sql && $MESOS_SANDBOX/aws.sh s3 cp backup/$DATABASE_NAME.sql s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/",
-        "environment" : { }
-	      },
-"      "health-check-spec" : null,
-%      "readiness-check-spec" : null,
-      "config-files" : [ {
-        "name" : "aws",
-$        "relative-path" : "aws.sh",
-ö        "template-content" : "#!/usr/bin/env bash\n\nset -o errexit\nset -o nounset\nset -o pipefail\n\n# enable interruption signal handling\ntrap - INT TERM\n\ndocker run --rm \\\n         -t $(tty &>/dev/null && echo \"-i\") \\\n         -e \"AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}\" \\\n         -e \"AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}\" \\\n         -e \"AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}\" \\\n         -v \"$(pwd):/project\" \\\n         mesosphere/aws-cli \\\n         $@\n"
-      } ],
-      "discovery-spec" : null
-	    }, {
-      "name" : "restore",
-      "goal" : "FINISHED",
-      "resource-set" : {
-"        "id" : "admin-resources",
-(        "resource-specifications" : [ {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "cpus",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 0.1
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        }, {
-+          "@type" : "DefaultResourceSpec",
-          "name" : "mem",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 512.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-          "envKey" : null
-        } ],
-&        "volume-specifications" : [ {
-)          "@type" : "DefaultVolumeSpec",
-          "type" : "ROOT",
-1          "container-path" : "cockroach-backup",
-          "name" : "disk",
-          "value" : {
-            "type" : "SCALAR",
-            "scalar" : {
-              "value" : 5000.0
-            },
-            "ranges" : null,
-            "set" : null,
-            "text" : null
-          },
-'          "role" : "cockroachdb-role",
-%          "pre-reserved-role" : "*",
-1          "principal" : "cockroachdb-principal",
-!          "envKey" : "DISK_SIZE"
-        } ],
-%        "role" : "cockroachdb-role",
-.        "principal" : "cockroachdb-principal"
-	      },
-      "command-spec" : {
-ç        "value" : "./bootstrap && chmod +x $MESOS_SANDBOX/aws.sh && mkdir restore && $MESOS_SANDBOX/aws.sh s3 cp s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/$DATABASE_NAME.sql restore/ && $MESOS_SANDBOX//cockroach sql --insecure --execute=\"CREATE DATABASE IF NOT EXISTS $DATABASE_NAME\" --host='pg.cockroachdb.l4lb.thisdcos.directory' && $MESOS_SANDBOX//cockroach sql --database=$DATABASE_NAME --insecure --host='pg.cockroachdb.l4lb.thisdcos.directory' < restore/$DATABASE_NAME.sql",
-        "environment" : { }
-	      },
-"      "health-check-spec" : null,
-%      "readiness-check-spec" : null,
-      "config-files" : [ {
-        "name" : "aws",
-$        "relative-path" : "aws.sh",
-ö        "template-content" : "#!/usr/bin/env bash\n\nset -o errexit\nset -o nounset\nset -o pipefail\n\n# enable interruption signal handling\ntrap - INT TERM\n\ndocker run --rm \\\n         -t $(tty &>/dev/null && echo \"-i\") \\\n         -e \"AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}\" \\\n         -e \"AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}\" \\\n         -e \"AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}\" \\\n         -v \"$(pwd):/project\" \\\n         mesosphere/aws-cli \\\n         $@\n"
-      } ],
-      "discovery-spec" : null
-	    } ],
-    "placement-rule" : null,
-    "volumes" : [ ],
-    "pre-reserved-role" : "*",
-    "secrets" : [ ]
-  } ],
-&  "replacement-failure-policy" : null
-}
-¿INFO  2017-07-18 09:50:44,873 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(86): Skipping config diff: There is no old config target to diff against
-õINFO  2017-07-18 09:50:44,874 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(120): Changes detected between current target configuration 'null' and new configuration. Setting target to new configuration.
-ÄINFO  2017-07-18 09:50:45,282 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:cleanupDuplicateAndUnusedConfigs(210): Config c96dbe1b-e0ee-4eb3-a5ae-966e50e22981 : cockroachdb 
-ŸINFO  2017-07-18 09:50:45,283 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:clearConfigsNotListed(307): Cleaning up 0 unused configs: []
-wINFO  2017-07-18 09:50:45,284 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:getPlans(277): Getting plans
-®INFO  2017-07-18 09:50:45,284 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-¾INFO  2017-07-18 09:50:45,286 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÔWARN  2017-07-18 09:50:45,287 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-ÄINFO  2017-07-18 09:50:45,288 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:45,288 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:45,289 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÐWARN  2017-07-18 09:50:45,290 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:45,291 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:45,291 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-¾INFO  2017-07-18 09:50:45,292 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÔWARN  2017-07-18 09:50:45,293 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-ÄINFO  2017-07-18 09:50:45,293 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:45,294 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:45,295 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÐWARN  2017-07-18 09:50:45,295 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:45,296 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:45,297 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-¾INFO  2017-07-18 09:50:45,298 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÔWARN  2017-07-18 09:50:45,299 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-ÄINFO  2017-07-18 09:50:45,300 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:45,301 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:45,302 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÐWARN  2017-07-18 09:50:45,303 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:45,303 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:45,304 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-¾INFO  2017-07-18 09:50:45,305 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÔWARN  2017-07-18 09:50:45,305 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-ÄINFO  2017-07-18 09:50:45,306 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:45,307 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:45,307 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÐWARN  2017-07-18 09:50:45,308 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:45,309 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-¥INFO  2017-07-18 09:50:45,310 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [backup]
-–INFO  2017-07-18 09:50:45,310 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-ÂWARN  2017-07-18 09:50:45,311 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-backup at: Tasks/admin-0-backup/TaskInfo
-»INFO  2017-07-18 09:50:45,312 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-¥INFO  2017-07-18 09:50:45,312 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-1, with tasks: [backup]
-–INFO  2017-07-18 09:50:45,313 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-1-backup, admin-1-restore]
-ÂWARN  2017-07-18 09:50:45,314 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-1-backup at: Tasks/admin-1-backup/TaskInfo
-»INFO  2017-07-18 09:50:45,314 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-1:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-¦INFO  2017-07-18 09:50:45,315 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [restore]
-–INFO  2017-07-18 09:50:45,315 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-ÄWARN  2017-07-18 09:50:45,316 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-restore at: Tasks/admin-0-restore/TaskInfo
-¼INFO  2017-07-18 09:50:45,317 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[restore]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:45,318 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-¾INFO  2017-07-18 09:50:45,319 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÔWARN  2017-07-18 09:50:45,319 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-ÄINFO  2017-07-18 09:50:45,320 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:45,321 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:45,321 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-ÐWARN  2017-07-18 09:50:45,322 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:45,323 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-®INFO  2017-07-18 09:50:45,324 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-¾INFO  2017-07-18 09:50:45,325 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÔWARN  2017-07-18 09:50:45,326 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-ÄINFO  2017-07-18 09:50:45,327 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-¬INFO  2017-07-18 09:50:45,328 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-¾INFO  2017-07-18 09:50:45,328 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-ÐWARN  2017-07-18 09:50:45,329 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-ÂINFO  2017-07-18 09:50:45,330 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-¤INFO  2017-07-18 09:50:45,332 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:overrideDeployPlan(397): Update type: 'DEPLOY', Found update plan: 'true'
