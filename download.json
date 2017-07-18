@@ -1,0 +1,27 @@
+{
+  "service": {
+    "name": "cockroachdb",
+    "user": "root",
+    "version": "1.0.3",
+    "http_port": 80,
+    "pg_port": 26257,
+    "container_http_port": 8123,
+    "container_pg_port": 26257,
+    "virtual_network": false
+  },
+  "node": {
+    "count": 3,
+    "placement_constraint": "hostname:UNIQUE",
+    "cpus": 1,
+    "mem": 3000,
+    "disk": 5000,
+    "disk_type": "ROOT"
+  },
+  "side": {
+    "count": 1,
+    "cpus": 1,
+    "mem": 1000,
+    "disk": 5000,
+    "disk_type": "ROOT"
+  }
+}

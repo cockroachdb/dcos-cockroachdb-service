@@ -12,9 +12,7 @@ import com.mesosphere.sdk.state.StateStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The CockroachdbRecoveryPlanManager handles failure scenarios unique to Cockroachdb. 
@@ -65,6 +63,29 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
         logger.info("Input Metric Step: {}", inputMetricStep);
 
 
+        PodInstance joinPodInstance = inputJoinStep.start().get().getPodInstance();
+        PodInstance podInstance = inputMetricStep.start().get().getPodInstance();
+        PodSpec podSpec = podInstance.getPod();
+        PodSpec joinPodSpec = joinPodInstance.getPod();
+        TaskSpec joinTaskSpec = joinPodSpec.getTasks().stream()
+                .filter(t -> t.getName().equals("node-join")).findFirst().get();
+        TaskSpec metricTaskSpec = podSpec.getTasks().stream()
+                .filter(t -> t.getName().equals("metrics")).findFirst().get();
+        PodSpec newJoinPodSpec = DefaultPodSpec.newBuilder(joinPodSpec)
+                .tasks(Arrays.asList(joinTaskSpec, metricTaskSpec)).build();
+        PodInstance newJoinPodInstance = new DefaultPodInstance(newJoinPodSpec, 0);
+        Collection joinCollect = inputJoinStep.start().get().getTasksToLaunch();
+        Collection metricsCollect = inputMetricStep.start().get().getTasksToLaunch();
+        Collection<String> all = new ArrayList<>();
+        all.addAll(joinCollect);
+        all.addAll(metricsCollect);
+        PodInstanceRequirement joinPodInstanceRequirement =
+                PodInstanceRequirement.newBuilder(
+                        newJoinPodInstance, all)
+                        .recoveryType(RecoveryType.PERMANENT)
+                        .build();
+
+        /*
         PodInstanceRequirement joinPodInstanceRequirement =
              PodInstanceRequirement.newBuilder(
                     inputJoinStep.start().get().getPodInstance(),
@@ -72,7 +93,9 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
                     )
             .recoveryType(RecoveryType.PERMANENT)
             .build();
+        */
 
+        /*
         PodInstance podInstance = inputMetricStep.start().get().getPodInstance();
         PodSpec podSpec = podInstance.getPod();
         TaskSpec taskSpec = podSpec.getTasks().stream().filter(t -> t.getName().equals("metrics")).findFirst().get();
@@ -84,10 +107,12 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
                         .recoveryType(RecoveryType.PERMANENT)
                         .build();
 
+
         logger.info("joinPodInstanceRequirement PodInstance: {}", joinPodInstanceRequirement.getPodInstance());
         logger.info("joinPodInstanceRequirement TaskToLaunch: {}", joinPodInstanceRequirement.getTasksToLaunch());
         logger.info("metricPodInstanceRequirement PodInstance: {}", metricPodInstanceRequirement.getPodInstance());
         logger.info("metricPodInstanceRequirement TaskToLaunch: {}", metricPodInstanceRequirement.getTasksToLaunch());
+        */
 
         Step joinStep = new DefaultRecoveryStep(
                 inputJoinStep.getName(),
@@ -95,23 +120,24 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
                 joinPodInstanceRequirement,
                 new UnconstrainedLaunchConstrainer(),
                 stateStore);
-
+        /*
         Step metricStep = new DefaultRecoveryStep(
                 inputMetricStep.getName(),
                 Status.PENDING,
                 metricPodInstanceRequirement,
                 new UnconstrainedLaunchConstrainer(),
                 stateStore);
+                */
 
         Phase phase = new DefaultPhase(
                 RECOVERY_PHASE_NAME,
-                Arrays.asList(joinStep, metricStep),
+                Arrays.asList(joinStep),
                 new ParallelStrategy<>(),
                 Collections.emptyList());
 
         logger.info("Output Phase: {}", phase);
         logger.info("Output Join Step: {}", joinStep);
-        logger.info("Output Metric Step: {}", metricStep);
+        //logger.info("Output Metric Step: {}", metricStep);
 
         return phase;
       }

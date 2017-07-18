@@ -95,26 +95,6 @@ pods:
               -e PYTHONUNBUFFERED=1 \
               --network='host' \
               sammisthemannis/cockroach-statsd:1.1"
-      restore:
-        goal: FINISHED
-        configs:
-          aws:
-            template: "{{CONFIG_TEMPLATE_PATH}}/aws.sh.mustache"
-            dest: "aws.sh"
-        cmd: "./bootstrap && \
-              chmod +x $MESOS_SANDBOX/aws.sh && \
-              mkdir restore && \
-              $MESOS_SANDBOX/aws.sh s3 cp \
-              s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/$DATABASE_NAME.sql \
-              restore/ && \
-              $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach sql --insecure \
-              --execute=\"CREATE DATABASE IF NOT EXISTS $DATABASE_NAME\" \
-              --host='pg.cockroachdb.l4lb.thisdcos.directory' && \
-              $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach sql \
-              --database=$DATABASE_NAME --insecure \
-              --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
-              restore/$DATABASE_NAME.sql"
-        resource-set: sidecar-resources
   admin:
     count: {{SIDE_COUNT}}
     uris:
@@ -145,6 +125,26 @@ pods:
               $MESOS_SANDBOX/aws.sh s3 cp \
               backup/$DATABASE_NAME.sql \
               s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/"
+        resource-set: admin-resources
+      restore:
+        goal: FINISHED
+        configs:
+          aws:
+            template: "{{CONFIG_TEMPLATE_PATH}}/aws.sh.mustache"
+            dest: "aws.sh"
+        cmd: "./bootstrap && \
+             chmod +x $MESOS_SANDBOX/aws.sh && \
+             mkdir restore && \
+             $MESOS_SANDBOX/aws.sh s3 cp \
+             s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/$DATABASE_NAME.sql \
+             restore/ && \
+             $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach sql --insecure \
+             --execute=\"CREATE DATABASE IF NOT EXISTS $DATABASE_NAME\" \
+             --host='pg.cockroachdb.l4lb.thisdcos.directory' && \
+             $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach sql \
+             --database=$DATABASE_NAME --insecure \
+             --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
+             restore/$DATABASE_NAME.sql"
         resource-set: admin-resources
 plans:
   deploy:
@@ -177,7 +177,7 @@ plans:
     phases:
       restore:
         strategy: serial
-        pod: cockroachdb
+        pod: admin
         steps:
           - 0: [[restore]]
   update:
