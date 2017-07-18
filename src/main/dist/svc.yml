@@ -42,6 +42,9 @@ pods:
           start:
             template: "{{CONFIG_TEMPLATE_PATH}}/start.sh.mustache"
             dest: "start.sh"
+          join:
+            template: "{{CONFIG_TEMPLATE_PATH}}/join.sh.mustache"
+            dest: "join.sh"
         cmd: "./bootstrap && \
               chmod +x $MESOS_SANDBOX/start.sh && \
               ln -s $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach cockroach && \
@@ -163,6 +166,7 @@ plans:
         strategy: parallel
         pod: cockroachdb
         steps:
+          - 0: [[node-init], [metrics]]
           - default: [[node-join], [metrics]]
   backup:
     strategy: serial
@@ -187,4 +191,5 @@ plans:
         strategy: serial
         pod: cockroachdb
         steps:
+          - 0: [[node-init], [metrics]]
           - default: [[node-join], [metrics]]

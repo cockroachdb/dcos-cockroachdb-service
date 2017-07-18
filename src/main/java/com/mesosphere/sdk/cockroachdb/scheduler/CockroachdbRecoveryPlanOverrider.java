@@ -68,11 +68,17 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
         PodSpec podSpec = podInstance.getPod();
         PodSpec joinPodSpec = joinPodInstance.getPod();
         TaskSpec joinTaskSpec = joinPodSpec.getTasks().stream()
-                .filter(t -> t.getName().equals("node-join")).findFirst().get();
+                .filter(t -> t.getName().equals("node-init")).findFirst().get();
+
+        // Dig into the node-init to get the command revised
+        CommandSpec command = joinTaskSpec.getCommand().get();
+        DefaultCommandSpec.Builder builder = DefaultCommandSpec.newBuilder(command);
+        builder.value(command.getValue().replace("start.sh", "join.sh"));
+        TaskSpec newTaskSpec = DefaultTaskSpec.newBuilder(joinTaskSpec).commandSpec(builder.build()).build();
         TaskSpec metricTaskSpec = podSpec.getTasks().stream()
                 .filter(t -> t.getName().equals("metrics")).findFirst().get();
         PodSpec newJoinPodSpec = DefaultPodSpec.newBuilder(joinPodSpec)
-                .tasks(Arrays.asList(joinTaskSpec, metricTaskSpec)).build();
+                .tasks(Arrays.asList(newTaskSpec, metricTaskSpec)).build();
         PodInstance newJoinPodInstance = new DefaultPodInstance(newJoinPodSpec, 0);
         Collection joinCollect = inputJoinStep.start().get().getTasksToLaunch();
         Collection metricsCollect = inputMetricStep.start().get().getTasksToLaunch();
@@ -84,6 +90,7 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
                         newJoinPodInstance, all)
                         .recoveryType(RecoveryType.PERMANENT)
                         .build();
+
 
         /*
         PodInstanceRequirement joinPodInstanceRequirement =
