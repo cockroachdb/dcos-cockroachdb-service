@@ -58,10 +58,6 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
         Step inputJoinStep = inputPhase.getChildren().get(0);
         Step inputMetricStep = inputPhase.getChildren().get(1);
 
-        logger.info("Input Phase: {}", inputPhase);
-        logger.info("Input Join Step: {}", inputJoinStep);
-        logger.info("Input Metric Step: {}", inputMetricStep);
-
 
         PodInstance joinPodInstance = inputJoinStep.start().get().getPodInstance();
         PodInstance podInstance = inputMetricStep.start().get().getPodInstance();
@@ -74,12 +70,17 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
         CommandSpec command = joinTaskSpec.getCommand().get();
         DefaultCommandSpec.Builder builder = DefaultCommandSpec.newBuilder(command);
         builder.value(command.getValue().replace("start.sh", "join.sh"));
+
+        // Form a new join task using the revised command
         TaskSpec newTaskSpec = DefaultTaskSpec.newBuilder(joinTaskSpec).commandSpec(builder.build()).build();
+
         TaskSpec metricTaskSpec = podSpec.getTasks().stream()
                 .filter(t -> t.getName().equals("metrics")).findFirst().get();
         PodSpec newJoinPodSpec = DefaultPodSpec.newBuilder(joinPodSpec)
                 .tasks(Arrays.asList(newTaskSpec, metricTaskSpec)).build();
         PodInstance newJoinPodInstance = new DefaultPodInstance(newJoinPodSpec, 0);
+
+        // Put all the task into one step
         Collection joinCollect = inputJoinStep.start().get().getTasksToLaunch();
         Collection metricsCollect = inputMetricStep.start().get().getTasksToLaunch();
         Collection<String> all = new ArrayList<>();
@@ -91,60 +92,18 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
                         .recoveryType(RecoveryType.PERMANENT)
                         .build();
 
-
-        /*
-        PodInstanceRequirement joinPodInstanceRequirement =
-             PodInstanceRequirement.newBuilder(
-                    inputJoinStep.start().get().getPodInstance(),
-                    inputJoinStep.start().get().getTasksToLaunch()
-                    )
-            .recoveryType(RecoveryType.PERMANENT)
-            .build();
-        */
-
-        /*
-        PodInstance podInstance = inputMetricStep.start().get().getPodInstance();
-        PodSpec podSpec = podInstance.getPod();
-        TaskSpec taskSpec = podSpec.getTasks().stream().filter(t -> t.getName().equals("metrics")).findFirst().get();
-        PodSpec newPodSpec = DefaultPodSpec.newBuilder(podSpec).tasks(Arrays.asList(taskSpec)).build();
-        PodInstance newPodInstance = new DefaultPodInstance(newPodSpec, 0);
-        PodInstanceRequirement metricPodInstanceRequirement =
-                PodInstanceRequirement.newBuilder(
-                        newPodInstance, inputMetricStep.start().get().getTasksToLaunch())
-                        .recoveryType(RecoveryType.PERMANENT)
-                        .build();
-
-
-        logger.info("joinPodInstanceRequirement PodInstance: {}", joinPodInstanceRequirement.getPodInstance());
-        logger.info("joinPodInstanceRequirement TaskToLaunch: {}", joinPodInstanceRequirement.getTasksToLaunch());
-        logger.info("metricPodInstanceRequirement PodInstance: {}", metricPodInstanceRequirement.getPodInstance());
-        logger.info("metricPodInstanceRequirement TaskToLaunch: {}", metricPodInstanceRequirement.getTasksToLaunch());
-        */
-
         Step joinStep = new DefaultRecoveryStep(
                 inputJoinStep.getName(),
                 Status.PENDING,
                 joinPodInstanceRequirement,
                 new UnconstrainedLaunchConstrainer(),
                 stateStore);
-        /*
-        Step metricStep = new DefaultRecoveryStep(
-                inputMetricStep.getName(),
-                Status.PENDING,
-                metricPodInstanceRequirement,
-                new UnconstrainedLaunchConstrainer(),
-                stateStore);
-                */
 
         Phase phase = new DefaultPhase(
                 RECOVERY_PHASE_NAME,
                 Arrays.asList(joinStep),
                 new ParallelStrategy<>(),
                 Collections.emptyList());
-
-        logger.info("Output Phase: {}", phase);
-        logger.info("Output Join Step: {}", joinStep);
-        //logger.info("Output Metric Step: {}", metricStep);
 
         return phase;
       }

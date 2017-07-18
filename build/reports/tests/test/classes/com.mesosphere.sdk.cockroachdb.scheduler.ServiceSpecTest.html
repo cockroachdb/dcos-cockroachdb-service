@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">4.425s</div>
+<div class="counter">5.010s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">testYmlBase</td>
-<td>4.425s</td>
+<td>5.010s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,7 +87,7 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>INFO  2017-07-17 18:02:11,503 [Test worker] com.mesosphere.sdk.cockroachdb.scheduler.ServiceSpecTest:getRawServiceSpec(74): Configured environment:
+<pre>INFO  2017-07-18 09:50:40,559 [Test worker] com.mesosphere.sdk.cockroachdb.scheduler.ServiceSpecTest:getRawServiceSpec(74): Configured environment:
 COCKROACH_HTTP_PORT=80
 COCKROACH_PG_PORT=26257
 CONFIG_TEMPLATE_PATH=/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist
@@ -107,7 +107,7 @@ SIDE_CPUS=0.1
 SIDE_DISK=5000
 SIDE_DISK_TYPE=ROOT
 SIDE_MEM=512
-INFO  2017-07-17 18:02:11,929 [Test worker] com.mesosphere.sdk.specification.yaml.RawServiceSpec$Builder:build(64): Rendered ServiceSpec:
+INFO  2017-07-18 09:50:41,087 [Test worker] com.mesosphere.sdk.specification.yaml.RawServiceSpec$Builder:build(64): Rendered ServiceSpec:
 name: cockroachdb
 scheduler:
   principal: 
@@ -300,8 +300,8 @@ plans:
           - 0: [[node-init], [metrics]]
           - default: [[node-join], [metrics]]
 
-INFO  2017-07-17 18:02:12,462 [Test worker] org.hibernate.validator.internal.util.Version:&lt;clinit&gt;(30): HV000001: Hibernate Validator 5.3.2.Final
-INFO  2017-07-17 18:02:15,036 [Test worker] com.mesosphere.sdk.cockroachdb.scheduler.ServiceSpecTest:getRawServiceSpec(74): Configured environment:
+INFO  2017-07-18 09:50:41,699 [Test worker] org.hibernate.validator.internal.util.Version:&lt;clinit&gt;(30): HV000001: Hibernate Validator 5.3.2.Final
+INFO  2017-07-18 09:50:44,631 [Test worker] com.mesosphere.sdk.cockroachdb.scheduler.ServiceSpecTest:getRawServiceSpec(74): Configured environment:
 COCKROACH_HTTP_PORT=80
 COCKROACH_PG_PORT=26257
 CONFIG_TEMPLATE_PATH=/Users/bohu/Workspace/dcos-commons/frameworks/cockroachdb/src/main/dist
@@ -321,7 +321,7 @@ SIDE_CPUS=0.1
 SIDE_DISK=5000
 SIDE_DISK_TYPE=ROOT
 SIDE_MEM=512
-INFO  2017-07-17 18:02:15,042 [Test worker] com.mesosphere.sdk.specification.yaml.RawServiceSpec$Builder:build(64): Rendered ServiceSpec:
+INFO  2017-07-18 09:50:44,641 [Test worker] com.mesosphere.sdk.specification.yaml.RawServiceSpec$Builder:build(64): Rendered ServiceSpec:
 name: cockroachdb
 scheduler:
   principal: 
@@ -514,70 +514,70 @@ plans:
           - 0: [[node-init], [metrics]]
           - default: [[node-join], [metrics]]
 
-INFO  2017-07-17 18:02:15,083 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:fixLastDeploymentType(315): Fixing last deployment type
-INFO  2017-07-17 18:02:15,088 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:getPlans(277): Getting plans
-INFO  2017-07-17 18:02:15,100 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-INFO  2017-07-17 18:02:15,105 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,109 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-INFO  2017-07-17 18:02:15,117 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,118 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,118 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,119 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,120 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,120 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-INFO  2017-07-17 18:02:15,121 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,122 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-INFO  2017-07-17 18:02:15,122 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,123 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,124 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,125 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,126 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,134 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-INFO  2017-07-17 18:02:15,135 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,136 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-INFO  2017-07-17 18:02:15,136 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,137 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,138 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,138 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,139 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,139 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-INFO  2017-07-17 18:02:15,140 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,141 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-INFO  2017-07-17 18:02:15,141 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,142 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,143 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,144 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,145 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,150 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [backup]
-INFO  2017-07-17 18:02:15,151 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-WARN  2017-07-17 18:02:15,151 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-backup at: Tasks/admin-0-backup/TaskInfo
-INFO  2017-07-17 18:02:15,152 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,152 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-1, with tasks: [backup]
-INFO  2017-07-17 18:02:15,153 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-1-backup, admin-1-restore]
-WARN  2017-07-17 18:02:15,154 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-1-backup at: Tasks/admin-1-backup/TaskInfo
-INFO  2017-07-17 18:02:15,155 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-1:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,156 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [restore]
-INFO  2017-07-17 18:02:15,156 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-WARN  2017-07-17 18:02:15,157 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-restore at: Tasks/admin-0-restore/TaskInfo
-INFO  2017-07-17 18:02:15,158 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[restore]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,159 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-INFO  2017-07-17 18:02:15,160 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,161 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-INFO  2017-07-17 18:02:15,161 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,162 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,163 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,164 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,164 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,165 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-INFO  2017-07-17 18:02:15,166 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,167 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-INFO  2017-07-17 18:02:15,167 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,168 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,168 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,169 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,170 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,190 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:updateConfig(516): Updating config with 5 validators...
-INFO  2017-07-17 18:02:15,204 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(76): New prospective config:
+INFO  2017-07-18 09:50:44,699 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:fixLastDeploymentType(315): Fixing last deployment type
+INFO  2017-07-18 09:50:44,704 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:getPlans(277): Getting plans
+INFO  2017-07-18 09:50:44,725 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
+INFO  2017-07-18 09:50:44,731 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:44,736 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
+INFO  2017-07-18 09:50:44,746 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,747 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
+INFO  2017-07-18 09:50:44,748 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:44,749 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
+INFO  2017-07-18 09:50:44,749 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,750 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
+INFO  2017-07-18 09:50:44,751 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:44,751 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
+INFO  2017-07-18 09:50:44,752 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,753 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
+INFO  2017-07-18 09:50:44,754 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:44,755 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
+INFO  2017-07-18 09:50:44,756 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,766 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
+INFO  2017-07-18 09:50:44,767 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:44,768 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
+INFO  2017-07-18 09:50:44,769 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,770 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
+INFO  2017-07-18 09:50:44,771 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:44,773 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
+INFO  2017-07-18 09:50:44,774 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,774 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
+INFO  2017-07-18 09:50:44,775 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:44,776 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
+INFO  2017-07-18 09:50:44,777 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,778 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
+INFO  2017-07-18 09:50:44,780 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:44,781 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
+INFO  2017-07-18 09:50:44,781 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,783 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [backup]
+INFO  2017-07-18 09:50:44,785 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
+WARN  2017-07-18 09:50:44,786 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-backup at: Tasks/admin-0-backup/TaskInfo
+INFO  2017-07-18 09:50:44,787 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,787 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-1, with tasks: [backup]
+INFO  2017-07-18 09:50:44,788 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-1-backup, admin-1-restore]
+WARN  2017-07-18 09:50:44,788 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-1-backup at: Tasks/admin-1-backup/TaskInfo
+INFO  2017-07-18 09:50:44,789 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-1:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,789 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [restore]
+INFO  2017-07-18 09:50:44,790 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
+WARN  2017-07-18 09:50:44,790 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-restore at: Tasks/admin-0-restore/TaskInfo
+INFO  2017-07-18 09:50:44,791 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[restore]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,791 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
+INFO  2017-07-18 09:50:44,792 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:44,792 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
+INFO  2017-07-18 09:50:44,793 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,793 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
+INFO  2017-07-18 09:50:44,794 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:44,794 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
+INFO  2017-07-18 09:50:44,795 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,795 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
+INFO  2017-07-18 09:50:44,796 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:44,796 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
+INFO  2017-07-18 09:50:44,797 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,798 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
+INFO  2017-07-18 09:50:44,798 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:44,799 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
+INFO  2017-07-18 09:50:44,800 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:44,822 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:updateConfig(516): Updating config with 5 validators...
+INFO  2017-07-18 09:50:44,831 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(76): New prospective config:
 {
   &quot;name&quot; : &quot;cockroachdb&quot;,
   &quot;role&quot; : &quot;cockroachdb-role&quot;,
@@ -1084,72 +1084,72 @@ INFO  2017-07-17 18:02:15,204 [Test worker] com.mesosphere.sdk.config.DefaultCon
   } ],
   &quot;replacement-failure-policy&quot; : null
 }
-INFO  2017-07-17 18:02:15,243 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(86): Skipping config diff: There is no old config target to diff against
-INFO  2017-07-17 18:02:15,244 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(120): Changes detected between current target configuration 'null' and new configuration. Setting target to new configuration.
-INFO  2017-07-17 18:02:15,660 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:cleanupDuplicateAndUnusedConfigs(210): Config b6b1dbd8-810a-4ad4-817e-5304d81b4346 : cockroachdb 
-INFO  2017-07-17 18:02:15,661 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:clearConfigsNotListed(307): Cleaning up 0 unused configs: []
-INFO  2017-07-17 18:02:15,663 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:getPlans(277): Getting plans
-INFO  2017-07-17 18:02:15,664 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-INFO  2017-07-17 18:02:15,665 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,665 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-INFO  2017-07-17 18:02:15,666 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,667 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,667 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,668 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,669 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,669 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-INFO  2017-07-17 18:02:15,670 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,671 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-INFO  2017-07-17 18:02:15,672 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,673 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,674 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,675 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,676 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,676 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-INFO  2017-07-17 18:02:15,677 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,677 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-INFO  2017-07-17 18:02:15,678 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,678 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,679 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,680 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,680 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,681 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-INFO  2017-07-17 18:02:15,681 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,682 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-INFO  2017-07-17 18:02:15,683 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,683 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,684 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,684 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,685 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,686 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [backup]
-INFO  2017-07-17 18:02:15,686 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-WARN  2017-07-17 18:02:15,687 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-backup at: Tasks/admin-0-backup/TaskInfo
-INFO  2017-07-17 18:02:15,687 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,688 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-1, with tasks: [backup]
-INFO  2017-07-17 18:02:15,688 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-1-backup, admin-1-restore]
-WARN  2017-07-17 18:02:15,689 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-1-backup at: Tasks/admin-1-backup/TaskInfo
-INFO  2017-07-17 18:02:15,690 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-1:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,691 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [restore]
-INFO  2017-07-17 18:02:15,691 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
-WARN  2017-07-17 18:02:15,692 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-restore at: Tasks/admin-0-restore/TaskInfo
-INFO  2017-07-17 18:02:15,692 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[restore]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,693 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
-INFO  2017-07-17 18:02:15,693 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,696 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
-INFO  2017-07-17 18:02:15,696 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,697 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,697 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
-WARN  2017-07-17 18:02:15,698 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,699 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,700 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
-INFO  2017-07-17 18:02:15,700 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,701 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
-INFO  2017-07-17 18:02:15,701 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,702 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
-INFO  2017-07-17 18:02:15,702 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
-WARN  2017-07-17 18:02:15,703 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
-INFO  2017-07-17 18:02:15,704 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
-INFO  2017-07-17 18:02:15,705 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:overrideDeployPlan(397): Update type: 'DEPLOY', Found update plan: 'true'
+INFO  2017-07-18 09:50:44,873 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(86): Skipping config diff: There is no old config target to diff against
+INFO  2017-07-18 09:50:44,874 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:updateConfiguration(120): Changes detected between current target configuration 'null' and new configuration. Setting target to new configuration.
+INFO  2017-07-18 09:50:45,282 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:cleanupDuplicateAndUnusedConfigs(210): Config c96dbe1b-e0ee-4eb3-a5ae-966e50e22981 : cockroachdb 
+INFO  2017-07-18 09:50:45,283 [Test worker] com.mesosphere.sdk.config.DefaultConfigurationUpdater:clearConfigsNotListed(307): Cleaning up 0 unused configs: []
+INFO  2017-07-18 09:50:45,284 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:getPlans(277): Getting plans
+INFO  2017-07-18 09:50:45,284 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
+INFO  2017-07-18 09:50:45,286 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:45,287 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
+INFO  2017-07-18 09:50:45,288 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,288 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
+INFO  2017-07-18 09:50:45,289 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:45,290 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
+INFO  2017-07-18 09:50:45,291 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,291 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
+INFO  2017-07-18 09:50:45,292 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:45,293 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
+INFO  2017-07-18 09:50:45,293 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,294 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
+INFO  2017-07-18 09:50:45,295 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:45,295 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
+INFO  2017-07-18 09:50:45,296 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,297 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
+INFO  2017-07-18 09:50:45,298 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:45,299 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
+INFO  2017-07-18 09:50:45,300 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,301 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
+INFO  2017-07-18 09:50:45,302 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:45,303 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
+INFO  2017-07-18 09:50:45,303 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,304 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
+INFO  2017-07-18 09:50:45,305 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:45,305 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
+INFO  2017-07-18 09:50:45,306 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,307 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
+INFO  2017-07-18 09:50:45,307 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:45,308 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
+INFO  2017-07-18 09:50:45,309 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,310 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [backup]
+INFO  2017-07-18 09:50:45,310 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
+WARN  2017-07-18 09:50:45,311 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-backup at: Tasks/admin-0-backup/TaskInfo
+INFO  2017-07-18 09:50:45,312 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,312 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-1, with tasks: [backup]
+INFO  2017-07-18 09:50:45,313 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-1-backup, admin-1-restore]
+WARN  2017-07-18 09:50:45,314 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-1-backup at: Tasks/admin-1-backup/TaskInfo
+INFO  2017-07-18 09:50:45,314 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-1:[backup]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,315 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: admin-0, with tasks: [restore]
+INFO  2017-07-18 09:50:45,315 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [admin-0-backup, admin-0-restore]
+WARN  2017-07-18 09:50:45,316 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: admin-0-restore at: Tasks/admin-0-restore/TaskInfo
+INFO  2017-07-18 09:50:45,317 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): admin-0:[restore]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,318 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [node-init]
+INFO  2017-07-18 09:50:45,319 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:45,319 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-node-init at: Tasks/cockroachdb-0-node-init/TaskInfo
+INFO  2017-07-18 09:50:45,320 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[node-init]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,321 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-0, with tasks: [metrics]
+INFO  2017-07-18 09:50:45,321 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-0-node-init, cockroachdb-0-node-join, cockroachdb-0-metrics]
+WARN  2017-07-18 09:50:45,322 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-0-metrics at: Tasks/cockroachdb-0-metrics/TaskInfo
+INFO  2017-07-18 09:50:45,323 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-0:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,324 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [node-join]
+INFO  2017-07-18 09:50:45,325 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:45,326 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-node-join at: Tasks/cockroachdb-1-node-join/TaskInfo
+INFO  2017-07-18 09:50:45,327 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[node-join]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,328 [Test worker] com.mesosphere.sdk.scheduler.plan.DefaultStepFactory:getStep(39): Generating step for pod: cockroachdb-1, with tasks: [metrics]
+INFO  2017-07-18 09:50:45,328 [Test worker] com.mesosphere.sdk.offer.TaskUtils:getTaskNames(72): PodInstance tasks: [cockroachdb-1-node-init, cockroachdb-1-node-join, cockroachdb-1-metrics]
+WARN  2017-07-18 09:50:45,329 [Test worker] com.mesosphere.sdk.state.DefaultStateStore:fetchTask(243): No TaskInfo found for the requested name: cockroachdb-1-metrics at: Tasks/cockroachdb-1-metrics/TaskInfo
+INFO  2017-07-18 09:50:45,330 [Test worker] com.mesosphere.sdk.scheduler.plan.DeploymentStep:setStatus(66): cockroachdb-1:[metrics]: changed status from: PENDING to: PENDING (interrupted=false)
+INFO  2017-07-18 09:50:45,332 [Test worker] com.mesosphere.sdk.scheduler.DefaultScheduler:overrideDeployPlan(397): Update type: 'DEPLOY', Found update plan: 'true'
 </pre>
 </span>
 </div>
@@ -1161,7 +1161,7 @@ INFO  2017-07-17 18:02:15,705 [Test worker] com.mesosphere.sdk.scheduler.Default
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.2</a> at Jul 17, 2017 6:02:20 PM</p>
+<a href="http://www.gradle.org">Gradle 3.2</a> at Jul 18, 2017 9:50:45 AM</p>
 </div>
 </div>
 </body>
