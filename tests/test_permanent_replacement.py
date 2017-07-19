@@ -55,10 +55,12 @@ def test_permanent_replacement():
     out_create_table = cmd.run_cli(cmd_create_table)
     out_insert = cmd.run_cli(cmd_insert)
 
+    old_task_ids = tasks.get_task_ids(SERVICE_NAME, 'cockroach')
     # Replace the init node
     shakedown.run_dcos_command('cockroachdb pods replace cockroachdb-0');
     tasks.check_running(SERVICE_NAME, DEFAULT_TASK_COUNT, 3*60)                                  # Wait for new CockroachDB node to run
     shakedown.wait_for(lambda: cockroach_nodes_healthy(), noisy=True, timeout_seconds=2*60)      # Wait for healthy CockroachDB cluster
+    old_task_ids = tasks.get_task_ids(SERVICE_NAME, 'cockroach')
 
     # Run cmd_select
     out_select = cmd.run_cli(cmd_select)

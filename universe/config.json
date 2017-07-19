@@ -136,7 +136,7 @@
             "title": "CPU count",
             "description": "Template pod CPU requirements",
             "type": "number",
-            "default":1.0
+            "default":1
           },
           "mem": {
             "title": "Memory size (MB)",
