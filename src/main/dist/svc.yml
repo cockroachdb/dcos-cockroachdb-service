@@ -135,7 +135,7 @@ pods:
           aws:
             template: "{{CONFIG_TEMPLATE_PATH}}/aws.sh.mustache"
             dest: "aws.sh"
-        cmd: "./bootstrap && \
+        cmd: "./bootstrap --resolve=false && \
              chmod +x $MESOS_SANDBOX/aws.sh && \
              mkdir restore && \
              $MESOS_SANDBOX/aws.sh s3 cp \
