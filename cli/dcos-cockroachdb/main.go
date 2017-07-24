@@ -17,7 +17,6 @@ func main() {
 
 	cli.HandleDefaultSections(app)
 
-	handleSQLSection(app)
 	handleBackupRestoreSection(app)
 	handleVersion(app)
 
@@ -167,51 +166,6 @@ func handleBackupRestoreSection(app *kingpin.Application) {
 	restore.Flag("region", "AWS region").Short('r').StringVar(&cmd.awsDefaultRegion)
 }
 
-type sqlHandler struct {
-	database string
-	user     string
-	execute  string
-}
-
-func (cmd *sqlHandler) sql(c *kingpin.ParseContext) error {
-	fmt.Printf("################################# \n")
-	fmt.Printf("Please ensure that DC/OS is 1.10 or later and DC/OS CLI version is 0.5.2 or later\n")
-	fmt.Printf("################################# \n")
-
-	var dcosCmd []string
-	cockroachHostFlag := fmt.Sprintf("--host=pg.%s.l4lb.thisdcos.directory", config.ServiceName)
-	cockroachTask := fmt.Sprintf("%s-0-node", config.ServiceName)
-
-	var dcosFlag string
-	if cmd.execute != "" {
-		dcosFlag = "-i"
-	} else {
-		dcosFlag = "-it"
-	}
-
-	dcosCmd = append(dcosCmd,
-		"task",
-		"exec",
-		dcosFlag,
-		cockroachTask,
-		"./cockroach",
-		"sql",
-		"--insecure",
-		cockroachHostFlag)
-
-	if cmd.database != "" {
-		dcosCmd = append(dcosCmd, "-d", cmd.database)
-	}
-	if cmd.user != "" {
-		dcosCmd = append(dcosCmd, "-u", cmd.user)
-	}
-	if cmd.execute != "" {
-		dcosCmd = append(dcosCmd, "-e", cmd.execute)
-	}
-
-	runDcosCommand(dcosCmd...)
-	return nil
-}
 
 func runDcosCommand(arg ...string) {
 	cmd := exec.Command("dcos", arg...)
@@ -240,12 +194,4 @@ func version(c *kingpin.ParseContext) error {
 
 func handleVersion(app *kingpin.Application) {
 	app.Command("version", "Output CockroachDB version and dependency details").Action(version)
-}
-
-func handleSQLSection(app *kingpin.Application) {
-	cmd := &sqlHandler{}
-	sql := app.Command("sql", "Opens interactive Cockroachdb SQL shell").Action(cmd.sql)
-	sql.Flag("database", "The database to connect to.").Short('d').StringVar(&cmd.database)
-	sql.Flag("user", "The user connecting to the database. The user must have privileges for any statement executed.").Short('u').StringVar(&cmd.user)
-	sql.Flag("execute", "SQL command to execute. Will open interactive shell if omitted.").Short('e').StringVar(&cmd.execute)
 }
