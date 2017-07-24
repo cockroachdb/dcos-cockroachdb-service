@@ -17,7 +17,6 @@ func main() {
 
 	cli.HandleDefaultSections(app)
 
-	handleSQLSection(app)
 	handleBackupRestoreSection(app)
 	handleVersion(app)
 
