@@ -31,9 +31,6 @@ pods:
           path: "cockroach-data"
           type: {{NODE_DISK_TYPE}}
           size: {{NODE_DISK}}
-      sidecar-resources:
-        cpus: {{SIDE_CPUS}}
-        memory: {{SIDE_MEM}}
     tasks:
       node-init:
         goal: RUNNING
@@ -88,16 +85,7 @@ pods:
           delay: 0
         env:
           COCKROACH_VERSION: {{COCKROACH_VERSION}}
-      metrics:
-        goal: RUNNING
-        resource-set: sidecar-resources
-        cmd: "docker run \
-              -e PORT_HTTP={{CONTAINER_HTTP_PORT}} \
-              -e STATSD_UDP_HOST=$STATSD_UDP_HOST \
-              -e STATSD_UDP_PORT=$STATSD_UDP_PORT \
-              -e PYTHONUNBUFFERED=1 \
-              --network='host' \
-              sammisthemannis/cockroach-statsd:1.1"
+          FRAMEWORK_NAME: {{FRAMEWORK_NAME}}
   admin:
     count: {{SIDE_COUNT}}
     uris:
@@ -149,16 +137,32 @@ pods:
              --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
              restore/$DATABASE_NAME.sql"
         resource-set: admin-resources
+      metrics:
+        goal: RUNNING
+        resource-set: admin-resources
+        cmd: "docker run \
+              -e FRAMEWORK_NAME={{FRAMEWORK_NAME}} \
+              -e PORT_HTTP={{CONTAINER_HTTP_PORT}} \
+              -e STATSD_UDP_HOST=$STATSD_UDP_HOST \
+              -e STATSD_UDP_PORT=$STATSD_UDP_PORT \
+              -e PYTHONUNBUFFERED=1 \
+              --network='host' \
+              sammisthemannis/cockroach-statsd:v1"
 plans:
   deploy:
-    strategy: serial
+    strategy: parallel
     phases:
       node-deploy:
-        strategy: serial
+        strategy: parallel
         pod: cockroachdb
         steps:
-          - 0: [[node-init], [metrics]]
-          - default: [[node-join], [metrics]]
+          - 0: [[node-init]]
+          - default: [[node-join]]
+      metrics-deploy:
+        strategy: parallel
+        pod: admin
+        steps:
+          - default: [[metrics]]
   replace:
     strategy: parallel
     phases:
@@ -166,8 +170,8 @@ plans:
         strategy: parallel
         pod: cockroachdb
         steps:
-          - 0: [[node-init], [metrics]]
-          - default: [[node-join], [metrics]]
+          - 0: [[node-init]]
+          - default: [[node-join]]
   backup:
     strategy: serial
     phases:
@@ -183,7 +187,7 @@ plans:
         strategy: serial
         pod: admin
         steps:
-          - 0: [[restore]]
+          - default: [[restore]]
   update:
     strategy: serial
     phases:
@@ -191,5 +195,10 @@ plans:
         strategy: serial
         pod: cockroachdb
         steps:
-          - 0: [[node-init], [metrics]]
-          - default: [[node-join], [metrics]]
+          - 0: [[node-init]]
+          - default: [[node-join]]
+      metrics-deploy:
+        strategy: serial
+        pod: admin
+        steps:
+          - default: [[metrics]]

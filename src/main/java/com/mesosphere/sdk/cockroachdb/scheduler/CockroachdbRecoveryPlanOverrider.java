@@ -1,6 +1,5 @@
 package com.mesosphere.sdk.cockroachdb.scheduler;
 
-import com.mesosphere.sdk.config.ConfigStore;
 import com.mesosphere.sdk.scheduler.plan.*;
 import com.mesosphere.sdk.scheduler.plan.strategy.ParallelStrategy;
 import com.mesosphere.sdk.scheduler.recovery.DefaultRecoveryStep;
@@ -23,15 +22,12 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     private static final String RECOVERY_PHASE_NAME = "permanent-node-failure-recovery";
     private final StateStore stateStore;
-    private final ConfigStore<ServiceSpec> configStore;
     private final Plan replaceNodePlan;
 
     public CockroachdbRecoveryPlanOverrider(
             StateStore stateStore,
-            ConfigStore<ServiceSpec> configStore,
             Plan replaceNodePlan) {
             this.stateStore = stateStore;
-            this.configStore = configStore;
             this.replaceNodePlan = replaceNodePlan;
             }
 
@@ -56,12 +52,9 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
     private Phase getNodeRecoveryPhase(Plan inputPlan) {
         Phase inputPhase = inputPlan.getChildren().get(0);
         Step inputJoinStep = inputPhase.getChildren().get(0);
-        Step inputMetricStep = inputPhase.getChildren().get(1);
 
 
         PodInstance joinPodInstance = inputJoinStep.start().get().getPodInstance();
-        PodInstance podInstance = inputMetricStep.start().get().getPodInstance();
-        PodSpec podSpec = podInstance.getPod();
         PodSpec joinPodSpec = joinPodInstance.getPod();
         TaskSpec joinTaskSpec = joinPodSpec.getTasks().stream()
                 .filter(t -> t.getName().equals("node-init")).findFirst().get();
@@ -73,19 +66,14 @@ public class CockroachdbRecoveryPlanOverrider implements RecoveryPlanOverrider {
 
         // Form a new join task using the revised command
         TaskSpec newTaskSpec = DefaultTaskSpec.newBuilder(joinTaskSpec).commandSpec(builder.build()).build();
-
-        TaskSpec metricTaskSpec = podSpec.getTasks().stream()
-                .filter(t -> t.getName().equals("metrics")).findFirst().get();
         PodSpec newJoinPodSpec = DefaultPodSpec.newBuilder(joinPodSpec)
-                .tasks(Arrays.asList(newTaskSpec, metricTaskSpec)).build();
+                .tasks(Arrays.asList(newTaskSpec)).build();
         PodInstance newJoinPodInstance = new DefaultPodInstance(newJoinPodSpec, 0);
 
         // Put all the task into one step
         Collection joinCollect = inputJoinStep.start().get().getTasksToLaunch();
-        Collection metricsCollect = inputMetricStep.start().get().getTasksToLaunch();
         Collection<String> all = new ArrayList<>();
         all.addAll(joinCollect);
-        all.addAll(metricsCollect);
         PodInstanceRequirement joinPodInstanceRequirement =
                 PodInstanceRequirement.newBuilder(
                         newJoinPodInstance, all)
