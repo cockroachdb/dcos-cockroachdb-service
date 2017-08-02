@@ -9,7 +9,7 @@ import (
 
 	"github.com/mesosphere/dcos-commons/cli"
 	"github.com/mesosphere/dcos-commons/cli/config"
-	"gopkg.in/alecthomas/kingpin.v2"
+	"gopkg.in/alecthomas/kingpin.v3-unstable"
 )
 
 func main() {
@@ -33,7 +33,7 @@ type backupRestoreHandler struct {
 	backupDir          string
 }
 
-func (cmd *backupRestoreHandler) backup(c *kingpin.ParseContext) error {
+func (cmd *backupRestoreHandler) backup(*kingpin.Application, *kingpin.ParseElement, *kingpin.ParseContext) error {
 	fmt.Printf("Backing up database [%s] to bucket [%s]...\n", cmd.database, cmd.s3BucketName)
 
 	var dcosCmd []string
@@ -92,7 +92,7 @@ func (cmd *backupRestoreHandler) backup(c *kingpin.ParseContext) error {
 	return nil
 }
 
-func (cmd *backupRestoreHandler) restore(c *kingpin.ParseContext) error {
+func (cmd *backupRestoreHandler) restore(*kingpin.Application, *kingpin.ParseElement, *kingpin.ParseContext) error {
 	fmt.Printf("Restoring database [%s] with backup [%s] from bucket [%s]...\n", cmd.database, cmd.backupDir, cmd.s3BucketName)
 
 	var dcosCmd []string
@@ -180,7 +180,7 @@ func runDcosCommand(arg ...string) {
 	}
 }
 
-func version(c *kingpin.ParseContext) error {
+func version(*kingpin.Application, *kingpin.ParseElement, *kingpin.ParseContext) error {
 	cockroachTask := fmt.Sprintf("%s-0-node", config.ServiceName)
 	runDcosCommand("task",
 			"exec",

@@ -17,11 +17,11 @@ class CockroachEmitter:
         statsd_host = os.getenv("STATSD_UDP_HOST")
         statsd_port = os.getenv("STATSD_UDP_PORT")
         self.conn = statsd.StatsClient(statsd_host, statsd_port)
-        self.run = False
 
     def start(self):
-        PORT_HTTP = os.getenv("PORT_HTTP")
-        url = "http://localhost:{}/_status/vars".format(PORT_HTTP)
+        framework_name = os.getenv("FRAMEWORK_NAME")
+        port_http = os.getenv("PORT_HTTP")
+        url = "http://pg.{}.l4lb.thisdcos.directory:{}/_status/vars".format(framework_name, port_http)
 
         self.run = True
         while self.run:
