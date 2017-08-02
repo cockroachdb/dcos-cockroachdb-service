@@ -36,6 +36,8 @@ class CockroachEmitter:
                 print("[CONNECTION ERROR] {}".format(e), file=sys.stderr)
                 print("[CONNECTION ERROR] Waiting {} seconds to retry...".format(self.CONNECTION_RETRY_INTERVAL), file=sys.stderr)
                 time.sleep(self.CONNECTION_RETRY_INTERVAL)
+            except ValueError as e:
+                print(e)
 
     def stop(self):
         self.run=False
