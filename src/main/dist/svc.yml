@@ -85,7 +85,6 @@ pods:
           delay: 0
         env:
           COCKROACH_VERSION: {{COCKROACH_VERSION}}
-          FRAMEWORK_NAME: {{FRAMEWORK_NAME}}
   admin:
     count: {{SIDE_COUNT}}
     uris:
