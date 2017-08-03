@@ -136,9 +136,15 @@ pods:
              --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
              restore/$DATABASE_NAME.sql"
         resource-set: admin-resources
-      metrics:
+  metrics:
+    count: 1
+    resource-sets:
+      metrics-resources:
+        cpus: {{SIDE_CPUS}}
+        memory: {{SIDE_MEM}}
+    tasks:
+      server:
         goal: RUNNING
-        resource-set: admin-resources
         cmd: "docker run \
               -e FRAMEWORK_NAME={{FRAMEWORK_NAME}} \
               -e PORT_HTTP={{CONTAINER_HTTP_PORT}} \
@@ -147,6 +153,7 @@ pods:
               -e PYTHONUNBUFFERED=1 \
               --network='host' \
               sammisthemannis/cockroach-statsd:v1"
+        resource-set: metrics-resources
 plans:
   deploy:
     strategy: parallel
@@ -159,9 +166,9 @@ plans:
           - default: [[node-join]]
       metrics-deploy:
         strategy: parallel
-        pod: admin
+        pod: metrics
         steps:
-          - default: [[metrics]]
+          - default: [[server]]
   replace:
     strategy: parallel
     phases:
@@ -198,6 +205,6 @@ plans:
           - default: [[node-join]]
       metrics-deploy:
         strategy: serial
-        pod: admin
+        pod: metrics
         steps:
-          - default: [[metrics]]
+          - default: [[server]]
