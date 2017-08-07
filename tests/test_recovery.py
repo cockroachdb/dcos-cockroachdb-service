@@ -6,7 +6,6 @@ import shakedown
 import sdk_cmd as cmd
 import sdk_install as install
 import sdk_utils as utils
-import sdk_test_upgrade as test_upgrade
 import sdk_tasks as tasks
 from tests.config import (
     PACKAGE_NAME,
