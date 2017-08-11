@@ -1,5 +1,21 @@
 # CockroachDB Service Guide
 
+## Build Instructions
+
+Since this framework was migrated from a branch off dcos-commons, you'll need a copy of that repository to build it
+(until the build scripts are modified appropriately). Steps to build:
+
+1. Clone [dcos-commons](https://github.com/mesosphere/dcos-commons).
+2. Add the following two lines to `dcos-commons/settings.gradle`:
+
+```
+include 'frameworks/cockroachdb'
+project(":frameworks/cockroachdb").name = "cockroachdb"
+```
+
+3. Clone this repo into `dcos-commons/frameworks/`.
+4. Use `dcos-commons/frameworks/cockroachdb/build.sh` to build.
+
 ## Table of Contents
 
 - [Overview](#overview)

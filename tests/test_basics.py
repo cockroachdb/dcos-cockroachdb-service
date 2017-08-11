@@ -137,7 +137,6 @@ def test_data_survives_crash():
         shakedown.kill_process_on_host(service_ip, "cockroach start")                                # Kill CockroachDB node
         tasks.check_running(SERVICE_NAME, DEFAULT_TASK_COUNT, 5*60)                                  # Wait for new CockroachDB node to run
         shakedown.wait_for(lambda: cockroach_nodes_healthy(), noisy=True, timeout_seconds=5*60)      # Wait for healthy CockroachDB cluster
-        time.sleep(30)                                                                               # Give CockroachDB time to replicate data
 
     # Run cmd_select
     out_select = cmd.run_cli(cmd_select)

@@ -4,7 +4,6 @@ import pytest
 import sdk_install as install
 import sdk_utils as utils
 import sdk_tasks as tasks
-import sdk_package as package
 import shakedown
 
 from tests.config import (
