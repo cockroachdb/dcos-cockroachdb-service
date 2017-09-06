@@ -12,20 +12,20 @@
     "DCOS_SERVICE_PORT_INDEX": "0",
     "DCOS_SERVICE_SCHEME": "http"
   },
-  {{#service.secret_name}}
+  {{#service.service_account_secret}}
   "secrets": {
     "serviceCredential": {
-      "source": "{{service.secret_name}}"
+      "source": "{{service.service_account_secret}}"
     }
   },
-  {{/service.secret_name}}
+  {{/service.service_account_secret}}
   "env": {
     "BOOTSTRAP_URI": "{{resource.assets.uris.bootstrap-zip}}",
     "CONFIG_TEMPLATE_PATH": "cockroachdb-scheduler",
 
     "FRAMEWORK_NAME": "{{service.name}}",
     "FRAMEWORK_USER": "{{service.user}}",
-    "FRAMEWORK_PRINCIPAL": "{{service.principal}}",
+    "FRAMEWORK_PRINCIPAL": "{{service.service_account}}",
     "COCKROACH_URI": "{{resource.assets.uris.cockroach-binary}}/cockroach-v{{service.version}}.linux-amd64.tgz",
     "COCKROACH_VERSION": "cockroach-v{{service.version}}.linux-amd64",
     "COCKROACH_HTTP_PORT": "{{service.http_port}}",
@@ -42,20 +42,20 @@
     "NODE_MEM": "{{node.mem}}",
     "NODE_DISK": "{{node.disk}}",
     "NODE_DISK_TYPE": "{{node.disk_type}}",
-
     "SIDE_COUNT": "{{side.count}}",
     "SIDE_CPUS": "{{side.cpus}}",
     "SIDE_MEM": "{{side.mem}}",
     "SIDE_DISK": "{{side.disk}}",
     "SIDE_DISK_TYPE": "{{side.disk_type}}",
 
-    "JAVA_URI": "{{resource.assets.uris.jre-tar-gz}}",
-    "EXECUTOR_URI": "{{resource.assets.uris.executor-zip}}",
-    {{#service.secret_name}}
+    {{#service.service_account_secret}}
     "DCOS_SERVICE_ACCOUNT_CREDENTIAL": { "secret": "serviceCredential" },
     "MESOS_MODULES": "{\"libraries\": [{\"file\": \"libdcos_security.so\", \"modules\": [{\"name\": \"com_mesosphere_dcos_ClassicRPCAuthenticatee\"}]}]}",
     "MESOS_AUTHENTICATEE": "com_mesosphere_dcos_ClassicRPCAuthenticatee",
-    {{/service.secret_name}}
+    {{/service.service_account_secret}}
+
+    "JAVA_URI": "{{resource.assets.uris.jre-tar-gz}}",
+    "EXECUTOR_URI": "{{resource.assets.uris.executor-zip}}",
     "LIBMESOS_URI": "{{resource.assets.uris.libmesos-bundle-tar-gz}}"
   },
   "uris": [
