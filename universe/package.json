@@ -4,7 +4,7 @@
   "name": "cockroachdb",
   "version": "1.0.1-1.0.5",
   "maintainer": "support@cockroachlabs.com",
-  "description": "CockroachDB is a distributed relational database that is scalable, survivable, and strongly consistent. Service Guide is available at: https://github.com/dcos/examples/. The source code for CockroachDB Enterprise is packaged in the same binary as CockroachDB Core.\n\n\tCustomers interested in the CockroachDB Enterprise license should contact https://www.cockroachlabs.com/pricing/sales/",
+  "description": "CockroachDB is a distributed relational database that is scalable, survivable, and strongly consistent. Service Guide is available at: https://github.com/dcos/examples/tree/master/cockroachdb/1.9 The source code for CockroachDB Enterprise is packaged in the same binary as CockroachDB Core.\n\n\tCustomers interested in the CockroachDB Enterprise license should contact https://www.cockroachlabs.com/pricing/sales/",
   "selected": false,
   "framework": true,
   "tags": ["cockroachdb", "sql", "database"],
