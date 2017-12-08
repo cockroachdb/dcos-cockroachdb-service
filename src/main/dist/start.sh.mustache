@@ -35,8 +35,8 @@ mkdir my-safe-directory
 {{MESOS_SANDBOX}}/{{COCKROACH_VERSION}}/cockroach start \
     --logtostderr \
     --insecure \
-    --cache={{CACHE}} \
-    --max-sql-memory={{MAX_SQL_MEMORY}} \
+    --cache={{COCKROACH_CACHE_SIZE}} \
+    --max-sql-memory={{COCKROACH_MAX_SQL_MEMORY}} \
     --advertise-host={{TASK_NAME}}.{{FRAMEWORK_NAME}}.autoip.dcos.thisdcos.directory \
     --http-port={{PORT_HTTP}} \
     --port={{PORT_PG}}
