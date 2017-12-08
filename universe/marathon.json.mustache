@@ -28,6 +28,8 @@
     "FRAMEWORK_PRINCIPAL": "{{service.service_account}}",
     "COCKROACH_URI": "{{resource.assets.uris.cockroach-binary}}/cockroach-v{{service.version}}.linux-amd64.tgz",
     "COCKROACH_VERSION": "cockroach-v{{service.version}}.linux-amd64",
+    "COCKROACH_CACHE_SIZE": "{{service.cache_size}}",
+    "COCKROACH_MAX_SQL_MEMORY": "{{service.max_sql_memory}}",
     "COCKROACH_HTTP_PORT": "{{service.http_port}}",
     "COCKROACH_PG_PORT": "{{service.pg_port}}",
     "CONTAINER_HTTP_PORT": "{{service.container_http_port}}",

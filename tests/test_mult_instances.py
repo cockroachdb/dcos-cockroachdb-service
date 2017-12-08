@@ -45,7 +45,7 @@ def test_two_service_install_with_one_task_each():
                                 "service": { "name": SERVICE_NAME },
                                 "node": { "count": task_count }
                                 }, #overrides the marathon configuration
-            package_version="1.0.1")
+            package_version="1.1.3")
         tasks.check_running(SERVICE_NAME, task_count)
 
 """ Make sure that you have at least DEFAULT_TASK_COUNT in your cluster for this test to pass
@@ -63,5 +63,5 @@ def test_two_service_install_with_DEFAULT_TASK_COUNT_tasks_each():
             additional_options={
                                 "service": { "name": SERVICE_NAME } #overrides marathon configuration
                                 },
-            package_version="1.0.1")
+            package_version="1.1.3")
         tasks.check_running(SERVICE_NAME, DEFAULT_TASK_COUNT)
