@@ -10,8 +10,8 @@ echo "Looks like there's already at least one other CockroachDB node running, co
 {{MESOS_SANDBOX}}/{{COCKROACH_VERSION}}/cockroach start \
     --insecure \
     --logtostderr \
-    --cache={{COCKRACH_CACHE_SIZE}} \
-    --max-sql-memory={{COCKRACH_MAX_SQL_MEMORY}} \
+    --cache={{COCKROACH_CACHE_SIZE}} \
+    --max-sql-memory={{COCKROACH_MAX_SQL_MEMORY}} \
     --advertise-host={{TASK_NAME}}.{{FRAMEWORK_NAME}}.autoip.dcos.thisdcos.directory \
     --http-port={{PORT_HTTP}} \
     --port={{PORT_PG}} \

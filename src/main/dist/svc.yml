@@ -60,6 +60,8 @@ pods:
           delay: 0
         env:
           COCKROACH_VERSION: {{COCKROACH_VERSION}}
+          COCKROACH_CACHE_SIZE: {{COCKROACH_CACHE_SIZE}}
+          COCKROACH_MAX_SQL_MEMORY: {{COCKROACH_MAX_SQL_MEMORY}}
       node-join:
         goal: RUNNING
         resource-set: server-resources
@@ -85,6 +87,8 @@ pods:
           delay: 0
         env:
           COCKROACH_VERSION: {{COCKROACH_VERSION}}
+          COCKROACH_CACHE_SIZE: {{COCKROACH_CACHE_SIZE}}
+          COCKROACH_MAX_SQL_MEMORY: {{COCKROACH_MAX_SQL_MEMORY}}
   admin:
     count: {{SIDE_COUNT}}
     uris:
