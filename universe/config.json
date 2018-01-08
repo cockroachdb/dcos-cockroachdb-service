@@ -31,7 +31,7 @@
             "title": "CockroachDB version",
             "description": "Production release version of CockroachDB",
             "type": "string",
-            "default": "1.1.3"
+            "default": "1.1.4"
           },
           "cache_size":{
             "title": "CockroachDB cache size",
