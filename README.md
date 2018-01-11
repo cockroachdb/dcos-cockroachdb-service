@@ -41,6 +41,7 @@
   - [Enterprise Backup and Restore](#enterprise-backup-restore)
 - [Supported Versions](#supported-versions)
 - [Build Instructions](#build-instructions)
+- [Publishing Instructions](#publishing-instructions)
 
 <a name="overview"></a>
 # Overview
@@ -583,3 +584,44 @@ project(":frameworks/cockroachdb").name = "cockroachdb"
 
 3. Clone this repo into `dcos-commons/frameworks/`.
 4. Use `dcos-commons/frameworks/cockroachdb/build.sh` to build.
+
+<a name="publishing-instructions"></a>
+# Publishing Instructions
+
+To publish a new version of this package to the DC/OS Universe package manager,
+follow these steps:
+
+1. Follow the above build instructions to clone dcos-commons and add the
+   cockroachdb framework to it.
+1. Run `S3_BUCKET=<your S3 bucket name> ./frameworks/cockroachdb/build.sh aws`
+   from the root of your modified dcos-commons repo. This will build the package
+   and push all the relevant artifacts to your S3 bucket. It doesn't matter what
+   bucket you use -- it's only for temporary storage. We'll use an official one
+   in a later step.
+1. Test the built package by following the instructions `build.sh` prints to run
+   it in a DC/OS cluster you own.
+1. Fork the [Universe](https://github.com/mesosphere/universe) repository.
+1. Run the following command to copy the release build and configuration into a
+   release S3 bucket:
+   ```
+   GITHUB_TOKEN=<your-github-access-token> RELEASE_UNIVERSE_REPO=<your-fork-of-mesosphere/universe> S3_RELEASE_BUCKET=dcos-cockroachdb HTTP_RELEASE_SERVER=https://dcos-cockroachdb.s3.amazonaws.com MIN_DCOS_RELEASE=1.9 RELEASE_DIR_PATH=dcos/release ./tools/release_builder.py X.Y.Z-X.Y.Z <url-from-previous-step> Update CockroachDB package to vX.Y.Z
+   ```
+   The URL that you want to use from the output of the `build.sh` step is the S3
+   URL for the `stub-universe-cockroachdb.json` file, which should be towards
+   the bottom of the output.  For example, a-robinson ran the following command
+   to update the CockroachDB package to v1.1.4:
+   ```
+   GITHUB_TOKEN=<omitted> RELEASE_UNIVERSE_REPO=a-robinson/universe S3_RELEASE_BUCKET=dcos-cockroachdb HTTP_RELEASE_SERVER=https://dcos-cockroachdb.s3.amazonaws.com MIN_DCOS_RELEASE=1.9 RELEASE_DIR_PATH=dcos/release ./tools/release_builder.py 1.1.4-1.1.4 https://alex-dcos-exhibitors3bucket-gx95x7buf8qx.s3.amazonaws.com/autodelete7d/cockroachdb/20180110-223034-FhU2xXR0jHocfp8S/stub-universe-cockroachdb.json Update CockroachDB package to v1.1.4
+   ```
+1. Assuming all goes well, this will push a new branch to your fork of the
+   mesosphere/universe repo. Find the branch that it pushed (which should be
+   easy since it also opens a PR against your fork) and open a PR against the
+   upstream repo using that branch.
+
+These steps have only been tested against commit
+f58f3b609f466c8cfd351fa7c38655055a358663 of dcos-commons, so if you hit problems
+along the way, consider retrying at that SHA. It may just be an issue with my
+local python version or the version of the repo I'm at, but I also had to
+replace `urllib.request.URLopener().retrieve(src_url, local_path)` with
+`urllib.request.urlretrieve(src_url, local_path)` on line 293 of
+`tools/release_builder.py` to get the release upload process to work.
