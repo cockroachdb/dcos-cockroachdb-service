@@ -62,6 +62,7 @@ pods:
           COCKROACH_VERSION: {{COCKROACH_VERSION}}
           COCKROACH_CACHE_SIZE: {{COCKROACH_CACHE_SIZE}}
           COCKROACH_MAX_SQL_MEMORY: {{COCKROACH_MAX_SQL_MEMORY}}
+          COCKROACH_CHANNEL: mesosphere-dcos
       node-join:
         goal: RUNNING
         resource-set: server-resources
@@ -89,6 +90,7 @@ pods:
           COCKROACH_VERSION: {{COCKROACH_VERSION}}
           COCKROACH_CACHE_SIZE: {{COCKROACH_CACHE_SIZE}}
           COCKROACH_MAX_SQL_MEMORY: {{COCKROACH_MAX_SQL_MEMORY}}
+          COCKROACH_CHANNEL: mesosphere-dcos
   admin:
     count: {{SIDE_COUNT}}
     uris:
