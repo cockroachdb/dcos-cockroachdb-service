@@ -69,7 +69,7 @@ or [Github repository](https://github.com/cockroachdb/cockroach).
 - Multiple CockroachDB instances sharing the same hosts for improved utilization
 - Placement constraints for fine-grained instance placement
 - Vertical and horizontal scaling for managing capacity
-- Rolling software and configuration updates for runtime maintainence
+- Rolling software and configuration updates for runtime maintenance
 - Built-in load balancing for clients inside the DC/OS cluster
 - Easy backup and restore of your databases
 
