@@ -4,6 +4,7 @@ scheduler:
 pods:
   cockroachdb:
     count: {{NODE_COUNT}}
+    image: {{CR_IMAGE}}
     uris:
       - {{COCKROACH_URI}}
       - {{BOOTSTRAP_URI}}

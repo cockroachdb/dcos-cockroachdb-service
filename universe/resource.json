@@ -9,6 +9,11 @@
       "cockroach-binary": "https://binaries.cockroachdb.com"
     }
   },
+  "container": {
+      "docker": {
+        "cr_image": "ubuntu:16.04",
+      }
+    },
 
   "images": {
     "icon-small": "http://i.imgur.com/FsEREZI.png",
