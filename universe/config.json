@@ -75,6 +75,12 @@
             "default": false
           }
         },
+        "cr_image": {
+          "title": "TensorFlow Docker Image",
+          "description": "Internal base image.",
+          "type": "string",
+          "default": "ubuntu:16.04"
+        },
         "required":[
           "name",
           "user"
