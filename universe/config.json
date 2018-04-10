@@ -27,12 +27,6 @@
             "type": "string",
             "default": ""
           },
-          "version":{
-            "title": "CockroachDB version",
-            "description": "Production release version of CockroachDB",
-            "type": "string",
-            "default": "2.0.0"
-          },
           "cache_size":{
             "title": "CockroachDB cache size",
             "description": "Cache size to be used by CockroachDB",
