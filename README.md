@@ -144,15 +144,15 @@ or [Github repository](https://github.com/cockroachdb/cockroach).
 The default CockroachDB installation provides reasonable defaults for trying out the service, but you may require different configurations depending on the context of your deployment.
 
 ## Prerequisities
-- If you are using Enterprise DC/OS, you may [need to provision a service account](https://docs.mesosphere.com/1.9/security/service-auth/custom-service-auth/) before installing CockroachDB. Only someone with `superuser` permission can create the service account.
-	- `strict` [security mode](https://docs.mesosphere.com/1.9/administration/installing/custom/configuration-parameters/#security) requires a service account.  
+- If you are using Enterprise DC/OS, you may [need to provision a service account](https://docs.mesosphere.com/latest/security/ent/service-auth/custom-service-auth/) before installing CockroachDB. Only someone with `superuser` permission can create the service account.
+	- `strict` [security mode](https://docs.mesosphere.com/latest/security/ent/#security-modes) requires a service account.  
 	- `permissive` security mode a service account is optional.
 	- `disabled` security mode does not require a service account.
 - Your cluster must have at least 3 private nodes.
 
 ## Installation from the DC/OS CLI
 
-To start a basic test cluster, run the following command on the DC/OS CLI. Enterprise DC/OS users must follow additional instructions. [More information about installing CockroachDB on Enterprise DC/OS](https://docs.mesosphere.com/1.9/security/service-auth/custom-service-auth/).
+To start a basic test cluster, run the following command on the DC/OS CLI. Enterprise DC/OS users must follow additional instructions. [More information about installing CockroachDB on Enterprise DC/OS](https://docs.mesosphere.com/latest/security/ent/service-auth/custom-service-auth/).
 
 ```shell
 dcos package install cockroachdb
@@ -164,11 +164,11 @@ You can specify a custom configuration in an `options.json` file and pass it to 
 $ dcos package install cockroachdb --options=your-options.json
 ```
 
-For more information about building the options.json file, see the [DC/OS documentation](https://docs.mesosphere.com/1.9/deploying-services/config-universe-service/) for service configuration access.
+For more information about building the options.json file, see the [DC/OS documentation](https://docs.mesosphere.com/latest/deploying-services/config-universe-service/) for service configuration access.
 
 ## Installation from the DC/OS Web Interface
 
-You can [install CockroachDB from the DC/OS web interface](https://docs.mesosphere.com/1.9/usage/managing-services/install/). If you install CockroachDB from the web interface, you must install the CockroachDB DC/OS CLI subcommands separately. From the DC/OS CLI, enter:
+You can [install CockroachDB from the DC/OS web interface](https://docs.mesosphere.com/latest/deploying-services/install/). If you install CockroachDB from the web interface, you must install the CockroachDB DC/OS CLI subcommands separately. From the DC/OS CLI, enter:
 
 ```bash
 dcos package install cockroachdb --cli
@@ -220,7 +220,7 @@ The service supports two volume types:
 - `ROOT` volumes are effectively an isolated directory on the root volume, sharing IO/spindles with the rest of the host system.
 - `MOUNT` volumes are a dedicated device or partition on a separate volume, with dedicated IO/spindles.
 
-Using `MOUNT` volumes requires [additional configuration on each DC/OS agent system](https://docs.mesosphere.com/1.9/storage/mount-disk-resources/), so the service currently uses `ROOT` volumes by default. To ensure reliable and consistent performance in a production environment, you should configure `MOUNT` volumes on the machines that will run the service in your cluster and then configure the node `Disk Type` setting to use `MOUNT` volumes.
+Using `MOUNT` volumes requires [additional configuration on each DC/OS agent system](https://docs.mesosphere.com/latest/storage/mount-disk-resources/), so the service currently uses `ROOT` volumes by default. To ensure reliable and consistent performance in a production environment, you should configure `MOUNT` volumes on the machines that will run the service in your cluster and then configure the node `Disk Type` setting to use `MOUNT` volumes.
 
 <a name="placement-constraints"></a>
 ### Placement Constraints
@@ -274,8 +274,7 @@ documentation](https://www.cockroachlabs.com/docs/stable/cluster-settings.html).
 Follow these steps to uninstall the service.
 
 1. Uninstall the service. From the DC/OS CLI, enter `dcos package uninstall`.
-1. Clean up remaining reserved resources with the framework cleaner script, `janitor.py`. [More information about the framework cleaner script](https://docs.mesosphere.com/1.9/deploying-services/uninstall/#framework-cleaner). Note that this step is only needed for DC/OS versions older than 1.10.
-
+1. If you are running a DC/OS Version older than 1.10: Clean up remaining reserved resources with the framework cleaner script, `janitor.py`. [More information about the framework cleaner script](https://docs.mesosphere.com/latest/deploying-services/uninstall/#framework-cleaner).
 To uninstall an instance named `cockroachdb` (the default), run:
 ``` shell
 $ MY_SERVICE_NAME=cockroachdb
@@ -566,7 +565,7 @@ consider contacting Cockroach Labs about an
 # Supported Versions
 
 - CockroachDB: Supports versions 1.0 and above
-- DC/OS: Tested on versions 1.9 and 1.10
+- DC/OS: Tested on versions 1.9, 1.10, and 1.11.
 
 <a name="build-instructions"></a>
 # Build Instructions
