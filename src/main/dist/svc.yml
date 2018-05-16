@@ -44,7 +44,7 @@ pods:
             dest: "join.sh"
         cmd: "./bootstrap && \
               chmod +x $MESOS_SANDBOX/start.sh && \
-              ln -s $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach cockroach && \
+              ln -s $MESOS_SANDBOX/{{COCKROACH_DIR}}/cockroach cockroach && \
               $MESOS_SANDBOX/start.sh"
         readiness-check:
           cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
@@ -59,7 +59,7 @@ pods:
           timeout: 10
           delay: 0
         env:
-          COCKROACH_VERSION: {{COCKROACH_VERSION}}
+          COCKROACH_DIR: {{COCKROACH_DIR}}
           COCKROACH_CACHE_SIZE: {{COCKROACH_CACHE_SIZE}}
           COCKROACH_MAX_SQL_MEMORY: {{COCKROACH_MAX_SQL_MEMORY}}
           COCKROACH_CHANNEL: mesosphere-dcos
@@ -72,7 +72,7 @@ pods:
             dest: "join.sh"
         cmd: "./bootstrap && \
               chmod +x $MESOS_SANDBOX/join.sh && \
-              ln -s $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach cockroach && \
+              ln -s $MESOS_SANDBOX/{{COCKROACH_DIR}}/cockroach cockroach && \
               $MESOS_SANDBOX/join.sh"
         readiness-check:
           cmd: "curl -sf localhost:$PORT_HTTP/_admin/v1/health >/dev/null 2>/dev/null"
@@ -87,7 +87,7 @@ pods:
           timeout: 10
           delay: 0
         env:
-          COCKROACH_VERSION: {{COCKROACH_VERSION}}
+          COCKROACH_DIR: {{COCKROACH_DIR}}
           COCKROACH_CACHE_SIZE: {{COCKROACH_CACHE_SIZE}}
           COCKROACH_MAX_SQL_MEMORY: {{COCKROACH_MAX_SQL_MEMORY}}
           COCKROACH_CHANNEL: mesosphere-dcos
@@ -115,7 +115,7 @@ pods:
               chmod +x $MESOS_SANDBOX/aws.sh && \
               mkdir backup && \
               touch backup/$DATABASE_NAME.sql && \
-              $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach dump $DATABASE_NAME --insecure \
+              $MESOS_SANDBOX/{{COCKROACH_DIR}}/cockroach dump $DATABASE_NAME --insecure \
               --host='pg.cockroachdb.l4lb.thisdcos.directory' > \
               backup/$DATABASE_NAME.sql && \
               $MESOS_SANDBOX/aws.sh s3 cp \
@@ -134,10 +134,10 @@ pods:
              $MESOS_SANDBOX/aws.sh s3 cp \
              s3://$S3_BUCKET_NAME/$S3_DIR_PATH/$BACKUP_DIR/$DATABASE_NAME.sql \
              restore/ && \
-             $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach sql --insecure \
+             $MESOS_SANDBOX/{{COCKROACH_DIR}}/cockroach sql --insecure \
              --execute=\"CREATE DATABASE IF NOT EXISTS $DATABASE_NAME\" \
              --host='pg.cockroachdb.l4lb.thisdcos.directory' && \
-             $MESOS_SANDBOX/{{COCKROACH_VERSION}}/cockroach sql \
+             $MESOS_SANDBOX/{{COCKROACH_DIR}}/cockroach sql \
              --database=$DATABASE_NAME --insecure \
              --host='pg.cockroachdb.l4lb.thisdcos.directory' < \
              restore/$DATABASE_NAME.sql"

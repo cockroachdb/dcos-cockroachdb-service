@@ -15,24 +15,24 @@ mkdir certs
 mkdir my-safe-directory
 
 # Create the CA key pair
-{{MESOS_SANDBOX}}/{{COCKROACH_VERSION}}/cockroach cert create-ca \
+{{MESOS_SANDBOX}}/{{COCKROACH_DIR}}/cockroach cert create-ca \
     --certs-dir=certs \
     --ca-key=my-safe-directory/ca.key
 
 # Create a client key pair for the root user
-{{MESOS_SANDBOX}}/{{COCKROACH_VERSION}}/cockroach cert create-client root \
+{{MESOS_SANDBOX}}/{{COCKROACH_DIR}}/cockroach cert create-client root \
     --certs-dir=certs \
     --ca-key=my-safe-directory/ca.key
 
 # Create a key pair for the first node
-{{MESOS_SANDBOX}}/{{COCKROACH_VERSION}}/cockroach cert create-node \
+{{MESOS_SANDBOX}}/{{COCKROACH_DIR}}/cockroach cert create-node \
     localhost \
     {{TASK_NAME}}.{{FRAMEWORK_NAME}}.autoip.dcos.thisdcos.directory \
     --certs-dir=certs \
     --ca-key=my-safe-directory/ca.key
 
 # Start CockroachDB server
-{{MESOS_SANDBOX}}/{{COCKROACH_VERSION}}/cockroach start \
+{{MESOS_SANDBOX}}/{{COCKROACH_DIR}}/cockroach start \
     --logtostderr \
     --insecure \
     --cache={{COCKROACH_CACHE_SIZE}} \
