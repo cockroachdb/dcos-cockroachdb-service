@@ -21,7 +21,7 @@ class CockroachEmitter:
     def start(self):
         framework_name = os.getenv("FRAMEWORK_NAME")
         port_http = os.getenv("PORT_HTTP")
-        url = "http://pg.{}.l4lb.thisdcos.directory:{}/_status/vars".format(framework_name, port_http)
+        url = "http://http.{}.l4lb.thisdcos.directory:{}/_status/vars".format(framework_name.replace("/",""), port_http)
 
         self.run = True
         while self.run:
