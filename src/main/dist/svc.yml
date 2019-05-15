@@ -153,7 +153,7 @@ pods:
         goal: RUNNING
         cmd: "docker run \
               -e FRAMEWORK_NAME={{FRAMEWORK_NAME}} \
-              -e PORT_HTTP={{CONTAINER_HTTP_PORT}} \
+              -e PORT_HTTP={{COCKROACH_HTTP_PORT}} \
               -e STATSD_UDP_HOST=$STATSD_UDP_HOST \
               -e STATSD_UDP_PORT=$STATSD_UDP_PORT \
               -e PYTHONUNBUFFERED=1 \
